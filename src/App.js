@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Logout from './pages/Logout';
 import Register from './pages/Register';
 import Products from './pages/Products';
+import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 
 
@@ -60,6 +61,7 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/logout" element={<Logout unsetUser={unsetUser} />} />
                         <Route path="/products" element={<Products />} />
+                        <Route path="/products/:id" element={<ProductDetail />} />
                         <Route path="/cart" element= {<Cart />} />
                         <Route path="*" element={<Error />} />
                     </Routes>

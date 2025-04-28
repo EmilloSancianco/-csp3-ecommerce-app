@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { Navigate } from 'react-router-dom'; // For redirect
+import { Navigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import UserContext from '../UserContext';
 
@@ -8,22 +8,11 @@ export default function Login() {
     const { user, setUser } = useContext(UserContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [isActive, setIsActive] = useState(true);
+    const [isActive, setIsActive] = useState(false);
     const [redirect, setRedirect] = useState(false);
 
-    // Authentication function
     function authenticate(e) {
         e.preventDefault();
-
-        // Clear any previous alerts
-        Swal.fire({
-            showConfirmButton: false,
-            title: 'Logging in...',
-            timer: 1500,
-            willOpen: () => {
-                Swal.showLoading();
-            }
-        });
 
         fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/users/login', {
             method: 'POST',
@@ -32,41 +21,46 @@ export default function Login() {
             },
             body: JSON.stringify({ email, password })
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.access) {
-                localStorage.setItem('token', data.access);
-                retrieveUserDetails(data.access);
+        .then(res => res.json().then(data => ({ status: res.status, body: data })))
+        .then(({ status, body }) => {
+            if (status === 200 && body.access) {
+                localStorage.setItem('token', body.access);
+                retrieveUserDetails(body.access);
 
                 Swal.fire({
                     title: "Login Successful",
                     icon: "success",
-                    text: "Welcome to Zuitt!"
+                    text: "Welcome back!"
                 });
 
-                setRedirect(true); // Set redirect state after successful login
+                setRedirect(true);
             } else {
+                // Handle specific error messages
+                let errorMsg = "Authentication failed. Please try again.";
+                if (body.error) {
+                    errorMsg = body.error;
+                }
+
                 Swal.fire({
-                    title: "Authentication failed",
+                    title: "Login Failed",
                     icon: "error",
-                    text: "Check your login details and try again."
+                    text: errorMsg
                 });
             }
         })
         .catch(err => {
+            console.error("Error during login:", err);
             Swal.fire({
-                title: "Error",
+                title: "Server Error",
                 icon: "error",
                 text: "Something went wrong, please try again later."
             });
-            console.error("Error during login:", err);
         });
 
         setEmail('');
         setPassword('');
     }
 
-    // Retrieve user details after successful login
     const retrieveUserDetails = (token) => {
         fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/users/details', {
             method: 'GET',
@@ -83,18 +77,18 @@ export default function Login() {
                 });
             } else {
                 Swal.fire({
-                    title: "User not found",
+                    title: "User Not Found",
                     icon: "error",
-                    text: "Could not retrieve user data. Please try again."
+                    text: "Failed to fetch user information."
                 });
             }
         })
         .catch(err => {
-            console.error("Error retrieving user details:", err);
+            console.error("Error fetching user details:", err);
             Swal.fire({
-                title: "Error",
+                title: "Server Error",
                 icon: "error",
-                text: "Failed to fetch user details. Please try again."
+                text: "Unable to retrieve user details."
             });
         });
     };
@@ -108,7 +102,7 @@ export default function Login() {
     }, [email, password]);
 
     if (redirect) {
-        return <Navigate to="/games" />; // Redirect to the Games page after login
+        return <Navigate to="/" />;
     }
 
     return (
@@ -137,11 +131,11 @@ export default function Login() {
             </Form.Group>
 
             {isActive ? (
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" className="mt-3">
                     Submit
                 </Button>
             ) : (
-                <Button variant="danger" type="submit" disabled>
+                <Button variant="secondary" type="submit" disabled className="mt-3">
                     Submit
                 </Button>
             )}

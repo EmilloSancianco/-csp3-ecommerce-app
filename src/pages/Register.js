@@ -6,125 +6,180 @@ import UserContext from '../UserContext';
 
 export default function Register() {
 
-	const {user} = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState(""); // Corrected useState typo
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [mobileNo, setMobileNo] = useState("");
+    const [password, setPassword] = useState("");
 
-	const [isActive, setIsActive] = useState(false);
+    const [isActive, setIsActive] = useState(false);
 
-	console.log(email);
-	console.log(password);
-	console.log(confirmPassword);
+    function registerUser(e) {
+        e.preventDefault();
 
-	function registerUser(e) {
+        // === Client-side Validations ===
 
-		// Prevents page redirection via form submission
-		e.preventDefault();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const mobileRegex = /^09\d{9}$/;
 
-		fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/register',{
+        if (!emailRegex.test(email)) {
+            Swal.fire({
+                title: "Invalid Email",
+                icon: "error",
+                text: "Please enter a valid email address."
+            });
+            return;
+        }
 
+        if (!mobileRegex.test(mobileNo)) {
+            Swal.fire({
+                title: "Invalid Mobile Number",
+                icon: "error",
+                text: "Mobile number must start with 09 and have 11 digits total."
+            });
+            return;
+        }
+
+        if (password.length < 8) {
+            Swal.fire({
+                title: "Weak Password",
+                icon: "error",
+                text: "Password must be at least 8 characters long."
+            });
+            return;
+        }
+
+        // === Proceed to send request if valid ===
+
+        fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/users/register', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-
-                email: email,  // Corrected to use email directly
-                password: password  // Corrected to use password directly
-
+                firstName,
+                lastName,
+                email,
+                mobileNo,
+                password
             })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.message === "Registered Successfully") {
+                // Reset all fields
+                setFirstName('');
+                setLastName('');
+                setEmail('');
+                setMobileNo('');
+                setPassword('');
 
-		})
-		.then(res => res.json())
-		.then(data => {
+                Swal.fire({
+                    title: "Registration Successful",
+                    icon: "success",
+                    text: "Thank you for registering!"
+                });
+            } else {
+                Swal.fire({
+                    title: "Something went wrong",
+                    icon: "error",
+                    text: data.error || "Please try again later or contact support."
+                });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            Swal.fire({
+                title: "Server Error",
+                icon: "error",
+                text: "Unable to connect to the server. Please try again later."
+            });
+        });
+    }
 
-			if(data.message === "Registered Successfully"){
+    useEffect(() => {
+        if (
+            firstName !== "" &&
+            lastName !== "" &&
+            email !== "" &&
+            mobileNo !== "" &&
+            password !== ""
+        ) {
+            setIsActive(true);
+        } else {
+            setIsActive(false);
+        }
+    }, [firstName, lastName, email, mobileNo, password]);
 
-				setEmail('');
-				setPassword('');
-				setConfirmPassword('');
+    return (
+        (user && user.id !== null) 
+        ? <Navigate to="/courses" /> 
+        : 
+        <Form onSubmit={registerUser}>
+            <h1 className="my-5 text-center">Register</h1>
 
-				Swal.fire({
-            	    title: "Registration Successful",
-            	    icon: "success",
-            	    text: "Thank you for registering!"
-            	});
+            <Form.Group>
+                <Form.Label>First Name:</Form.Label>
+                <Form.Control 
+                    type="text" 
+                    placeholder="Enter First Name" 
+                    required
+                    value={firstName} 
+                    onChange={e => setFirstName(e.target.value)} 
+                />
+            </Form.Group>
 
-			} else {
-				
-				Swal.fire({
-            	    title: "Something went wrong.",
-            	    icon: "error",
-            	    text: "Please try again later or contact us for assistance"
-            	});
+            <Form.Group>
+                <Form.Label>Last Name:</Form.Label>
+                <Form.Control 
+                    type="text" 
+                    placeholder="Enter Last Name" 
+                    required
+                    value={lastName} 
+                    onChange={e => setLastName(e.target.value)} 
+                />
+            </Form.Group>
 
-			}
+            <Form.Group>
+                <Form.Label>Email:</Form.Label>
+                <Form.Control 
+                    type="email" 
+                    placeholder="Enter Email" 
+                    required
+                    value={email} 
+                    onChange={e => setEmail(e.target.value)} 
+                />
+            </Form.Group>
 
-		})
-	}
-    
+            <Form.Group>
+                <Form.Label>Mobile Number:</Form.Label>
+                <Form.Control 
+                    type="text" 
+                    placeholder="09XXXXXXXXX" 
+                    required
+                    value={mobileNo} 
+                    onChange={e => setMobileNo(e.target.value)} 
+                />
+            </Form.Group>
 
-	useEffect(() => {
+            <Form.Group>
+                <Form.Label>Password:</Form.Label>
+                <Form.Control 
+                    type="password" 
+                    placeholder="Enter Password (min 8 chars)" 
+                    required
+                    value={password} 
+                    onChange={e => setPassword(e.target.value)} 
+                />
+            </Form.Group>
 
-		if((email !== "" && password !== "" && confirmPassword !== "") && (password === confirmPassword)){
-
-			setIsActive(true);
-
-		} else {
-
-			setIsActive(false);
-
-		}
-
-	}, [email, password, confirmPassword]);  // Corrected dependency array to use email, password, and confirmPassword
-
-	return (
-
-		(user && user.id !== null) ?  // Added user null check to prevent errors if user is not available
-		    <Navigate to="/courses" />
-		:
-			
-			<Form onSubmit={(e) => registerUser(e)}>
-				<h1 className="my-5 text-center">Register</h1>
-
-				<Form.Group>
-					<Form.Label>Email:</Form.Label>
-					<Form.Control 
-						type="email"
-						placeholder="Enter Email" 
-						required 
-						value={email} 
-						onChange={e => setEmail(e.target.value)} />
-				</Form.Group>
-
-				<Form.Group>
-					<Form.Label>Password:</Form.Label>
-					<Form.Control 
-						type="password" 
-						placeholder="Enter Password" 
-						required 
-						value={password} 
-						onChange={e => setPassword(e.target.value)} /> {/* Corrected onChange */}
-				</Form.Group>
-
-				<Form.Group>
-					<Form.Label>Confirm Password:</Form.Label>
-					<Form.Control 
-						type="password" 
-						placeholder="Confirm Password" 
-						required 
-						value={confirmPassword} 
-						onChange={e => setConfirmPassword(e.target.value)} /> {/* Corrected onChange */}
-				</Form.Group>
-
-				{
-					isActive
-					? <Button variant="primary" type="submit">Submit</Button>
-					: <Button variant="primary" disabled>Submit</Button>
-				}
-			</Form>
-		
-	)
+            {
+                isActive
+                ? <Button variant="primary" type="submit" className="mt-3">Submit</Button>
+                : <Button variant="primary" disabled className="mt-3">Submit</Button>
+            }
+        </Form>
+    );
 }
