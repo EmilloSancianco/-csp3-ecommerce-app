@@ -18,9 +18,9 @@ export default function Products() {
     return (
         <div className="mt-5">
             <h1 className="text-center mb-4">Products</h1>
-            <Row className="justify-content-center">
+            <Row className="justify-content-center g-4">
                 {products.map(product => (
-                    <Col key={product._id} xs={12} md={6} lg={4}>
+                    <Col key={product._id} xs={12} sm={6} md={4} lg={3}>
                         <ProductCard product={product} />
                     </Col>
                 ))}

@@ -1,56 +1,145 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
+import { Card, Button, Form, InputGroup } from 'react-bootstrap'; // Import React-Bootstrap components
+
+const notyf = new Notyf();
 
 export default function ProductDetail() {
-    const { id } = useParams(); // Get the product ID from the URL
-    const [product, setProduct] = useState(null); // State to store product details
-    const [loading, setLoading] = useState(true); // State for loading status
-    const [error, setError] = useState(null); // State for error handling
-    const [cart, setCart] = useState([]); // Cart state (for adding items to cart)
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [quantity, setQuantity] = useState(1);
+    const [subtotal, setSubtotal] = useState(0);
 
-    // Fetch product details from the API
     useEffect(() => {
-        fetch(`https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/products/${id}`) // Replace with your actual API endpoint
-            .then((response) => response.json())
-            .then((data) => {
-                setProduct(data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                setError(err);
-                setLoading(false);
-            });
+        fetchProductDetails(id);
     }, [id]);
 
-    // Handle adding product to cart
-    const handleAddToCart = () => {
-        setCart([...cart, product]);
-        alert(`${product.name} has been added to your cart.`);
+    const fetchProductDetails = async (productId) => {
+        try {
+            const response = await fetch(`https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/products/${productId}`);
+            const data = await response.json();
+            setProduct(data);
+            setLoading(false);
+            setSubtotal(data.price);
+        } catch (err) {
+            setError(err);
+            setLoading(false);
+        }
+    };
+
+    const handleQuantityChange = (action) => {
+        let newQuantity = quantity;
+        if (action === 'increment') {
+            newQuantity = quantity + 1;
+        } else if (action === 'decrement' && quantity > 1) {
+            newQuantity = quantity - 1;
+        }
+        setQuantity(newQuantity);
+        if (product) {
+            setSubtotal(newQuantity * product.price);
+        }
+    };
+
+    const handleAddToCart = async () => {
+        try {
+            const response = await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/cart/add-to-cart', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    productId: product._id,
+                    quantity: quantity,
+                    subtotal: subtotal
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                notyf.success('Added to cart!');
+                setTimeout(() => {
+                    navigate('/cart');
+                }, 1000);
+            } else {
+                notyf.error(data.message || 'Failed to add to cart.');
+            }
+        } catch (err) {
+            notyf.error('An error occurred while adding to cart.');
+            console.error(err);
+        }
     };
 
     if (loading) {
         return <div>Loading...</div>;
     }
 
-    if (error) {
-        return <div>Error fetching product details: {error.message}</div>;
-    }
-
-    if (!product) {
-        return <div>Product not found!</div>;
+    if (error || !product) {
+        return <div>Something went wrong. Please try again later.</div>;
     }
 
     return (
-        <div className="product-detail-page">
-            <h1>{product.name}</h1>
-            <img src={product.imageUrl} alt={product.name} className="product-image" />
-            <div className="product-info">
-                <p><strong>Description:</strong> {product.description}</p>
-                <p><strong>Price:</strong> ${product.price}</p>
-                <button onClick={handleAddToCart} className="add-to-cart-button">
-                    Add to Cart
-                </button>
-            </div>
+        <div className="d-flex justify-content-center my-4">
+            <Card style={{ width: '100%', maxWidth: '800px', border: '1px solid #ddd' }}>
+                {/* Product Name as Header */}
+                <Card.Header 
+                    className="text-center" 
+                    style={{ backgroundColor: '#333', color: 'white', fontWeight: 'bold', fontSize: '1.25rem' }}
+                >
+                    {product.name}
+                </Card.Header>
+                <Card.Body>
+                    {/* Product Description */}
+                    <Card.Text className="mb-3">
+                        {product.description}
+                    </Card.Text>
+                    {/* Price */}
+                    <Card.Text className="mb-3">
+                        <strong>Price:</strong> ₱{product.price}
+                    </Card.Text>
+                    {/* Quantity Selector */}
+                    <div className="d-flex align-items-center mb-3">
+                        <span className="me-2"><strong>Quantity:</strong></span>
+                        <InputGroup style={{ width: '120px' }}>
+                            <Button 
+                                variant="dark" 
+                                onClick={() => handleQuantityChange('decrement')} 
+                                disabled={quantity <= 1}
+                            >
+                                -
+                            </Button>
+                            <Form.Control 
+                                type="text" 
+                                value={quantity} 
+                                readOnly 
+                                className="text-center" 
+                                style={{ border: '1px solid #333' }}
+                            />
+                            <Button 
+                                variant="dark" 
+                                onClick={() => handleQuantityChange('increment')}
+                            >
+                                +
+                            </Button>
+                        </InputGroup>
+                    </div>
+                    {/* Add to Cart Button */}
+                    <Button 
+                        variant="primary" 
+                        onClick={handleAddToCart} 
+                        disabled={loading || !product}
+                        style={{ backgroundColor: '#007bff', borderColor: '#007bff' }}
+                    >
+                        Add to Cart
+                    </Button>
+                </Card.Body>
+            </Card>
         </div>
     );
 }
