@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
-import { Card, Button, Form, InputGroup } from 'react-bootstrap'; // Import React-Bootstrap components
+import { Card, Button, Form, InputGroup } from 'react-bootstrap';
 
 const notyf = new Notyf();
 
@@ -86,27 +86,20 @@ export default function ProductDetail() {
 
     return (
         <div className="d-flex justify-content-center my-4">
-            <Card style={{ width: '100%', maxWidth: '800px', border: '1px solid #ddd' }}>
-                {/* Product Name as Header */}
-                <Card.Header 
-                    className="text-center" 
-                    style={{ backgroundColor: '#333', color: 'white', fontWeight: 'bold', fontSize: '1.25rem' }}
-                >
+            <Card className="product-detail-card">
+                <Card.Header className="text-center product-detail-header">
                     {product.name}
                 </Card.Header>
                 <Card.Body>
-                    {/* Product Description */}
                     <Card.Text className="mb-3">
                         {product.description}
                     </Card.Text>
-                    {/* Price */}
                     <Card.Text className="mb-3">
                         <strong>Price:</strong> ₱{product.price}
                     </Card.Text>
-                    {/* Quantity Selector */}
                     <div className="d-flex align-items-center mb-3">
                         <span className="me-2"><strong>Quantity:</strong></span>
-                        <InputGroup style={{ width: '120px' }}>
+                        <InputGroup className="product-detail-quantity">
                             <Button 
                                 variant="dark" 
                                 onClick={() => handleQuantityChange('decrement')} 
@@ -118,8 +111,7 @@ export default function ProductDetail() {
                                 type="text" 
                                 value={quantity} 
                                 readOnly 
-                                className="text-center" 
-                                style={{ border: '1px solid #333' }}
+                                className="text-center product-detail-quantity-display"
                             />
                             <Button 
                                 variant="dark" 
@@ -129,12 +121,11 @@ export default function ProductDetail() {
                             </Button>
                         </InputGroup>
                     </div>
-                    {/* Add to Cart Button */}
                     <Button 
                         variant="primary" 
                         onClick={handleAddToCart} 
                         disabled={loading || !product}
-                        style={{ backgroundColor: '#007bff', borderColor: '#007bff' }}
+                        className="product-detail-add-to-cart"
                     >
                         Add to Cart
                     </Button>

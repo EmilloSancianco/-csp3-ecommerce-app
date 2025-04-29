@@ -1,3 +1,126 @@
 .card {
   min-height: 40vh;
 }
+
+/* ProductCard.js Start */
+
+.product-card {
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.product-card-img {
+  height: 250px;
+  object-fit: cover;
+  opacity: 0.85;
+  width: 100%;
+}
+
+.product-card-title {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.product-card-description {
+  font-size: 0.9rem;
+  color: #ccc;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 2.6rem;
+}
+
+.product-card-price {
+  font-size: 1.1rem;
+}
+
+.product-card-button {
+  width: 100%;
+}
+
+/* ProductCard.js End */
+
+/* Cart.js Start */
+
+.cart-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.cart-table-header {
+  background-color: #333;
+  color: white;
+}
+
+.cart-table-name {
+  width: 30%;
+}
+
+.cart-table-price {
+  width: 15%;
+}
+
+.cart-table-quantity {
+  width: 15%;
+}
+
+.cart-table-subtotal {
+  width: 15%;
+}
+
+.cart-table-actions {
+  width: 25%;
+}
+
+.cart-table-name-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cart-quantity-input {
+  width: 120px;
+}
+
+.cart-quantity-button {
+  border: 1px solid #333;
+  background-color: #343a40;
+  color: white;
+}
+
+.cart-quantity-button.decrement {
+  border-right: none;
+}
+
+.cart-quantity-button.increment {
+  border-left: none;
+}
+
+.cart-quantity-button:disabled {
+  background-color: #6c757d;
+}
+
+.cart-quantity-display {
+  border: 1px solid #333;
+}
+
+/* Cart.js End */
+
+/* CheckOut Start */
+
+.checkout-table-header {
+    background-color: #343a40;
+    color: white;
+}
+
+/* CheckOut End */
+
+/* ProductDetails Start */
+
+.product-detail-header {
+  background-color: #333 !important;
+  color: white !important;
+}
+
+/* ProductDetails End */

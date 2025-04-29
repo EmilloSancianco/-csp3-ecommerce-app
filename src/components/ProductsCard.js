@@ -32,8 +32,7 @@ export default function ProductCard({ product }) {
 
     return (
         <Card
-            className="bg-dark text-white border-0 shadow-sm rounded-4 overflow-hidden"
-            style={{ transition: 'transform 0.3s ease-in-out', cursor: 'pointer' }}
+            className="bg-dark text-white border-0 shadow-sm rounded-4 overflow-hidden product-card"
             onClick={handleViewProduct}
         >
             {/* Image Section */}
@@ -41,45 +40,25 @@ export default function ProductCard({ product }) {
                 variant="top"
                 src={getImageUrl()}
                 alt={product.name}
-                style={{
-                    height: '250px',
-                    objectFit: 'cover',
-                    opacity: 0.85,
-                    width: '100%',
-                }}
+                className="product-card-img"
                 loading="lazy"
             />
             <Card.Body className="d-flex flex-column justify-content-between p-3">
                 <div>
                     {/* Product Title */}
-                    <Card.Title
-                        className="fw-bold text-center text-truncate"
-                        style={{ fontSize: '1.2rem', marginBottom: '10px' }}
-                    >
+                    <Card.Title className="fw-bold text-center text-truncate product-card-title">
                         {product.name}
                     </Card.Title>
 
                     {/* Product Description */}
-                    <Card.Text
-                        className="text-center"
-                        style={{
-                            fontSize: '0.9rem',
-                            color: '#ccc', // Lighter color for visibility
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2, // Limit to 2 lines
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            minHeight: '2.6rem', // Reserve space for 2 lines
-                        }}
-                    >
+                    <Card.Text className="text-center product-card-description">
                         {renderDescription()}
                     </Card.Text>
                 </div>
 
                 <div className="mt-3 d-flex flex-column align-items-center">
                     {/* Price Section */}
-                    <Card.Text className="fs-5 mb-2" style={{ fontSize: '1.1rem' }}>
+                    <Card.Text className="fs-5 mb-2 product-card-price">
                         <strong>Price:</strong> ₱{product.price}
                     </Card.Text>
 
@@ -91,8 +70,7 @@ export default function ProductCard({ product }) {
                             e.stopPropagation();
                             handleViewProduct();
                         }}
-                        className="text-uppercase fw-bold px-4 py-2 rounded-pill"
-                        style={{ width: '100%' }}
+                        className="text-uppercase fw-bold px-4 py-2 rounded-pill product-card-button"
                     >
                         View Product
                     </Button>

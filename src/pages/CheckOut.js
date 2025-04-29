@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Button, Table, Row, Col } from 'react-bootstrap';
 import { Notyf } from 'notyf';
 import { useNavigate } from 'react-router-dom';
-import 'notyf/notyf.min.css';
 
 export default function CheckOut() {
     const [cart, setCart] = useState(null);
@@ -80,7 +79,7 @@ export default function CheckOut() {
                 <h2>Checkout Summary</h2>
                 <Table bordered hover>
                     <thead>
-                        <tr style={{ backgroundColor: '#343a40', color: 'white' }}>
+                        <tr className="checkout-table-header">
                             <th>Name</th>
                             <th>Price</th>
                             <th>Quantity</th>

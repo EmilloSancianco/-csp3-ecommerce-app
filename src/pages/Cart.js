@@ -8,8 +8,8 @@ export default function Cart() {
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const notyf = new Notyf();  // Create an instance of Notyf
-    const navigate = useNavigate(); // 🆕 Add this for navigation
+    const notyf = new Notyf();
+    const navigate = useNavigate();
 
     const fetchCart = async () => {
         try {
@@ -153,35 +153,30 @@ export default function Cart() {
                 {cart && cart.cartItems.length === 0 ? (
                     <div>Your cart is empty.</div>
                 ) : (
-                    <Table bordered style={{ tableLayout: 'fixed', width: '100%' }}>
+                    <Table bordered className="cart-table">
                         <thead>
-                            <tr style={{ backgroundColor: '#333', color: 'white' }}>
-                                <th style={{ width: '30%' }}>Name</th>
-                                <th style={{ width: '15%' }}>Price</th>
-                                <th style={{ width: '15%' }}>Quantity</th>
-                                <th style={{ width: '15%' }}>Subtotal</th>
-                                <th style={{ width: '25%' }}>Actions</th>
+                            <tr className="cart-table-header">
+                                <th className="cart-table-name">Name</th>
+                                <th className="cart-table-price">Price</th>
+                                <th className="cart-table-quantity">Quantity</th>
+                                <th className="cart-table-subtotal">Subtotal</th>
+                                <th className="cart-table-actions">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {cart.cartItems.map(item => (
                                 <tr key={item._id}>
-                                    <td style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                    <td className="cart-table-name-cell">
                                         {item.productName}
                                     </td>
                                     <td>₱{item.subtotal / item.quantity}</td>
                                     <td>
-                                        <InputGroup style={{ width: '120px' }}>
+                                        <InputGroup className="cart-quantity-input">
                                             <Button
                                                 variant="dark"
                                                 onClick={() => handleQuantityChange(item.productId, 'decrement')}
                                                 disabled={item.quantity <= 1}
-                                                style={{
-                                                    border: '1px solid #333',
-                                                    borderRight: 'none',
-                                                    backgroundColor: item.quantity <= 1 ? '#6c757d' : '#343a40',
-                                                    color: 'white',
-                                                }}
+                                                className="cart-quantity-button decrement"
                                             >
                                                 -
                                             </Button>
@@ -189,18 +184,12 @@ export default function Cart() {
                                                 type="text"
                                                 value={item.quantity}
                                                 readOnly
-                                                className="text-center"
-                                                style={{ border: '1px solid #333' }}
+                                                className="text-center cart-quantity-display"
                                             />
                                             <Button
                                                 variant="dark"
                                                 onClick={() => handleQuantityChange(item.productId, 'increment')}
-                                                style={{
-                                                    border: '1px solid #333',
-                                                    borderLeft: 'none',
-                                                    backgroundColor: '#343a40',
-                                                    color: 'white',
-                                                }}
+                                                className="cart-quantity-button increment"
                                             >
                                                 +
                                             </Button>
@@ -221,7 +210,6 @@ export default function Cart() {
                     </Table>
                 )}
                 
-                {/* ✨ Here are the TWO BUTTONS side-by-side */}
                 <div className="d-flex mt-3">
                     <Button variant="danger" onClick={handleClearCart} className="me-2">
                         Clear Cart
@@ -230,7 +218,6 @@ export default function Cart() {
                         Check Out
                     </Button>
                 </div>
-
             </Col>
         </Row>
     );
