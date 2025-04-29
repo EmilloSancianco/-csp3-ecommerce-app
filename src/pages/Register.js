@@ -1,11 +1,12 @@
 import { useState, useEffect, useContext } from 'react';
-import { Form, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import { Navigate } from 'react-router-dom';
+import { Container, Row, Col } from 'react-bootstrap'; // Importing Bootstrap components
 import UserContext from '../UserContext';
+import RegisterForm from '../components/RegisterForm';
+import Loading from '../components/Loading'; // Import Loading component
 
 export default function Register() {
-
     const { user } = useContext(UserContext);
 
     const [firstName, setFirstName] = useState("");
@@ -15,12 +16,13 @@ export default function Register() {
     const [password, setPassword] = useState("");
 
     const [isActive, setIsActive] = useState(false);
+    const [loading, setLoading] = useState(false); // New loading state
+    const [redirect, setRedirect] = useState(false); // New redirect state
 
     function registerUser(e) {
         e.preventDefault();
 
         // === Client-side Validations ===
-
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const mobileRegex = /^09\d{9}$/;
 
@@ -52,6 +54,7 @@ export default function Register() {
         }
 
         // === Proceed to send request if valid ===
+        setLoading(true); // Set loading state to true when starting registration
 
         fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/users/register', {
             method: 'POST',
@@ -68,6 +71,8 @@ export default function Register() {
         })
         .then(res => res.json())
         .then(data => {
+            setLoading(false); // Set loading to false once registration is completed
+
             if (data.message === "Registered Successfully") {
                 // Reset all fields
                 setFirstName('');
@@ -79,8 +84,11 @@ export default function Register() {
                 Swal.fire({
                     title: "Registration Successful",
                     icon: "success",
-                    text: "Thank you for registering!"
+                    text: "Your account has been registered successfully!"
                 });
+
+                // Redirect to login page after successful registration
+                setRedirect(true);
             } else {
                 Swal.fire({
                     title: "Something went wrong",
@@ -90,6 +98,7 @@ export default function Register() {
             }
         })
         .catch(err => {
+            setLoading(false); // Set loading to false in case of error
             console.error(err);
             Swal.fire({
                 title: "Server Error",
@@ -113,73 +122,36 @@ export default function Register() {
         }
     }, [firstName, lastName, email, mobileNo, password]);
 
+    if (redirect) {
+        return <Navigate to="/login" />; // Redirect to login page after successful registration
+    }
+
     return (
         (user && user.id !== null) 
         ? <Navigate to="/courses" /> 
-        : 
-        <Form onSubmit={registerUser}>
-            <h1 className="my-5 text-center">Register</h1>
-
-            <Form.Group>
-                <Form.Label>First Name:</Form.Label>
-                <Form.Control 
-                    type="text" 
-                    placeholder="Enter First Name" 
-                    required
-                    value={firstName} 
-                    onChange={e => setFirstName(e.target.value)} 
-                />
-            </Form.Group>
-
-            <Form.Group>
-                <Form.Label>Last Name:</Form.Label>
-                <Form.Control 
-                    type="text" 
-                    placeholder="Enter Last Name" 
-                    required
-                    value={lastName} 
-                    onChange={e => setLastName(e.target.value)} 
-                />
-            </Form.Group>
-
-            <Form.Group>
-                <Form.Label>Email:</Form.Label>
-                <Form.Control 
-                    type="email" 
-                    placeholder="Enter Email" 
-                    required
-                    value={email} 
-                    onChange={e => setEmail(e.target.value)} 
-                />
-            </Form.Group>
-
-            <Form.Group>
-                <Form.Label>Mobile Number:</Form.Label>
-                <Form.Control 
-                    type="text" 
-                    placeholder="09XXXXXXXXX" 
-                    required
-                    value={mobileNo} 
-                    onChange={e => setMobileNo(e.target.value)} 
-                />
-            </Form.Group>
-
-            <Form.Group>
-                <Form.Label>Password:</Form.Label>
-                <Form.Control 
-                    type="password" 
-                    placeholder="Enter Password (min 8 chars)" 
-                    required
-                    value={password} 
-                    onChange={e => setPassword(e.target.value)} 
-                />
-            </Form.Group>
-
-            {
-                isActive
-                ? <Button variant="primary" type="submit" className="mt-3">Submit</Button>
-                : <Button variant="primary" disabled className="mt-3">Submit</Button>
-            }
-        </Form>
+        : <Container className="mt-5 pt-5">
+            <Row className="justify-content-center">
+                <Col xs={12} md={6} lg={4}>
+                    {loading ? (
+                        <Loading message="Registering your account..." /> // Show loading screen
+                    ) : (
+                        <RegisterForm
+                            firstName={firstName}
+                            setFirstName={setFirstName}
+                            lastName={lastName}
+                            setLastName={setLastName}
+                            email={email}
+                            setEmail={setEmail}
+                            mobileNo={mobileNo}
+                            setMobileNo={setMobileNo}
+                            password={password}
+                            setPassword={setPassword}
+                            isActive={isActive}
+                            onSubmit={registerUser}
+                        />
+                    )}
+                </Col>
+            </Row>
+        </Container>
     );
 }

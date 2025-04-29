@@ -1,7 +1,10 @@
+// src/pages/CheckOut.js
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Row, Col } from 'react-bootstrap';
+import { Button, Row, Col } from 'react-bootstrap';
 import { Notyf } from 'notyf';
 import { useNavigate } from 'react-router-dom';
+import CheckoutTable from '../components/CheckOutTable';
+import Loading from '../components/Loading';  // Import the Loading component
 
 export default function CheckOut() {
     const [cart, setCart] = useState(null);
@@ -50,9 +53,6 @@ export default function CheckOut() {
             }
 
             notyf.success('Order placed successfully!');
-            setTimeout(() => {
-                navigate('/');
-            }, 2000);
 
         } catch (err) {
             console.error('Checkout Error:', err.message);
@@ -65,7 +65,7 @@ export default function CheckOut() {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <Loading message="Loading your checkout..." />;  // Use the Loading component here
     }
 
     if (!cart || cart.cartItems.length === 0) {
@@ -74,29 +74,10 @@ export default function CheckOut() {
     }
 
     return (
-        <Row className="my-4">
+        <Row className="mt-5 pt-5">
             <Col md={12}>
                 <h2>Checkout Summary</h2>
-                <Table bordered hover>
-                    <thead>
-                        <tr className="checkout-table-header">
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {cart.cartItems.map(item => (
-                            <tr key={item._id}>
-                                <td>{item.productName || 'Unnamed Product'}</td>
-                                <td>₱{item.subtotal / item.quantity}</td>
-                                <td>{item.quantity}</td>
-                                <td>₱{item.subtotal}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                <CheckoutTable cartItems={cart.cartItems} />
                 <h4>Total: ₱{cart.totalPrice}</h4>
                 <Button variant="success" className="mt-3" onClick={handleCheckout}>
                     Place Order

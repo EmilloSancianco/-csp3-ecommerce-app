@@ -1,55 +1,175 @@
-.card {
-  min-height: 40vh;
+/* src/components/AppNavbar.css */
+.navbar-center {
+  background-color: white !important; /* No background */
+  padding: 10px 0; /* Adjust navbar padding */
+  box-shadow: none; /* Remove shadow */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Ensure the navbar is above other content */
+  text-align: center; /* Center align the navbar items */
+  border-bottom: 2px solid rgb(197, 197, 197); /* Line under the navbar */
+}
+
+.navbar-brand {
+  font-size: 2rem;
+  font-weight: bold;
+  color: black; /* Black text for brand */
+  text-decoration: none;
+  margin-right: 50px; /* Adjust spacing between the brand and the links */
+}
+
+.navbar-brand:hover {
+  text-decoration: none; /* No underline on hover for brand */
+}
+
+.nav-link {
+  font-size: 1.1rem;
+  color: black; /* Black text for nav links */
+  padding: 8px 15px;
+  text-decoration: none;
+  position: relative;
+}
+
+.nav-link:hover {
+  text-decoration: none; /* Remove default underline on hover */
+}
+
+/* Underline effect on hover */
+.nav-link::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: black; /* Black underline */
+  bottom: 0;
+  left: 0;
+  transform: scaleX(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1); /* Underline appears on hover */
+}
+
+/* Toggler button for mobile view */
+.navbar-toggler {
+  border-color: rgba(0, 0, 0, 0.1); /* Light gray border instead of black */
+}
+
+/* Reset toggler icon color */
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='gray' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+
+.homepage-banner {
+  background-color: transparent;
+  border-bottom: 1px solid #ddd;
+}
+
+.banner-section {
+  background-image: url('https://media.istockphoto.com/id/1143919019/photo/mock-up-modern-living-room-interior-design-with-free-space-on-right-3d-render.jpg?s=612x612&w=0&k=20&c=sKiWdZ2RBYVoeklgz4bsyfD8eq28a0E1y7QdqA-6btA=');
+  background-size: cover;           /* Ensure the image covers the entire area */
+  background-repeat: no-repeat;     /* Prevent tiling */
+  background-position: center;      /* Center the image */
+  height: 400px;                    /* Fixed height for consistency */
+  width: 100vw;                     /* Stretch to full viewport width */
+  position: relative;
+  margin-top: 60px;                 /* Space below navbar */
+  margin-bottom: 2rem;
+  margin-left: calc(-50vw + 50%);   /* Offset to stretch beyond container */
+  margin-right: calc(-50vw + 50%);  /* Offset to stretch beyond container */
+}
+
+.banner-overlay {
+  background-color: rgba(0, 0, 0, 0.3); /* Lighter overlay for better image visibility */
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;         /* Center content for better balance */
+}
+
+/* Ensure text and button are readable and responsive */
+.banner-section .text-end {
+  padding: 1rem;
+}
+
+.banner-section h1 {
+  font-size: 3rem;                 /* Adjust font size for better visibility */
+  margin-bottom: 0.5rem;
+}
+
+.banner-section p {
+  font-size: 1.25rem;              /* Slightly larger for readability */
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .banner-section {
+    height: 300px;                 /* Reduce height on smaller screens */
+    margin-top: 50px;             /* Adjust margin for mobile */
+  }
+
+  .banner-section h1 {
+    font-size: 2rem;               /* Smaller font for mobile */
+  }
+
+  .banner-section p {
+    font-size: 1rem;               /* Smaller font for mobile */
+  }
+
+  .banner-section .text-end {
+    text-align: center !important; /* Center text on mobile for better aesthetics */
+  }
+}
+
+/* Ensure navbar doesn't overlap */
+.navbar {
+  position: relative;              /* Ensure navbar doesn't use fixed positioning */
+  z-index: 1000;                   /* Keep navbar above banner */
+  background-color: #fff;          /* Ensure navbar background is solid */
 }
 
 /* ProductCard.js Start */
 
+
+
+/* ProductCard.css */
+
 .product-card {
-  transition: transform 0.3s ease-in-out;
   cursor: pointer;
-  width: 280px; /* Wider width for the card */
-  margin: 15px; /* Space between cards */
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center content horizontally */
-  justify-content: space-between; /* Ensure spacing between sections */
-  min-height: 400px; /* Set a minimum height for consistency */
-  max-height: 450px; /* Prevent the card from growing too tall */
-  overflow: hidden; /* Ensure content doesn't overflow the card */
+  height: 100%;
+  transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
 }
 
 .product-card-img {
-  height: 180px; /* Reduced image height */
+  height: 180px;
   object-fit: cover;
-  opacity: 0.85;
   width: 100%;
 }
 
-.product-card-title {
-  font-size: 1.2rem; /* Title font size */
-  margin-bottom: 10px;
-  text-align: center; /* Center the title */
-  line-height: 1.3; /* Allow wrapping with proper line spacing */
-  min-height: 3.9em; /* Reserve space for up to 3 lines of title */
+.product-image-container {
+  position: relative;
 }
 
-.product-card-price {
-  font-size: 1.1rem; /* Price font size */
-  text-align: center; /* Center the price */
-  font-weight: bold; /* Match the bold price in the image */
-  margin-bottom: 10px;
+.product-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.15);
 }
 
-.product-card-button {
-  max-width: 200px;
-  width: 100%; /* Ensure the button takes up the max-width */
-  padding: 10px;
-  background-color: transparent; /* Match the button style in the image */
-  color: white;
-  border: 1px solid white; /* White border to match the image */
-  border-radius: 25px; /* Rounded button */
-  font-size: 0.9rem;
-}
+
 
 
 
@@ -57,182 +177,118 @@
 
 /* Cart.js Start */
 
-.cart-table {
-  table-layout: fixed;
-  width: 100%;
+/* Minimalistic cart table */
+.minimalistic-table {
+  border: none !important;
+  border-collapse: collapse !important;
+  font-size: 1rem !important;
+  color: #333 !important;
 }
 
-.cart-table-header {
-  background-color: #333;
-  color: white;
+.minimalistic-table th,
+.minimalistic-table td {
+  padding: 12px !important;
+  text-align: left !important;
+  vertical-align: middle !important;
 }
 
-.cart-table-name {
-  width: 30%;
+.minimalistic-table th {
+  font-weight: 600 !important;
+  background-color: #f8f9fa !important;
+  color: #555 !important;
+  border-bottom: 2px solid #dee2e6 !important;
 }
 
-.cart-table-price {
-  width: 15%;
+.minimalistic-table td {
+  border-bottom: 1px solid #e9ecef !important;
 }
 
-.cart-table-quantity {
-  width: 15%;
+.minimalistic-table .cart-quantity-input {
+  max-width: 150px !important;
 }
 
-.cart-table-subtotal {
-  width: 15%;
-}
 
-.cart-table-actions {
-  width: 25%;
-}
-
-.cart-table-name-cell {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.cart-quantity-input {
-  width: 120px;
+.cart-quantity-display {
+  max-width: 50px;
+  text-align: center;
 }
 
 .cart-quantity-button {
-  border: 1px solid #333;
-  background-color: #343a40;
-  color: white;
+  border-radius: 50%;
+  min-width: 35px;
+  font-size: 1rem;
 }
 
-.cart-quantity-button.decrement {
-  border-right: none;
+.cart-quantity-button:focus,
+.cart-quantity-button:active {
+  outline: none;
 }
 
-.cart-quantity-button.increment {
-  border-left: none;
+button:disabled {
+  background-color: #e9ecef;
+  color: #aaa;
 }
 
-.cart-quantity-button:disabled {
-  background-color: #6c757d;
+button:focus {
+  outline: none;
 }
 
-.cart-quantity-display {
-  border: 1px solid #333;
+button,
+input,
+select,
+textarea {
+  font-family: 'Arial', sans-serif;
 }
+
+.minimalistic-table td button {
+  padding: 0.4rem 1rem;
+}
+
+.minimalistic-table td button:focus {
+  outline: none;
+}
+
+button:disabled {
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+
+button:focus,
+button:active {
+  box-shadow: none;
+}
+
+.minimalistic-table .remove-button {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+button.remove-button:hover {
+  color: #c0392b;
+}
+
+button.remove-button:focus {
+  outline: none;
+}
+
+
+
 
 /* Cart.js End */
 
 /* CheckOut Start */
 
-.checkout-table-header {
-    background-color: #343a40;
-    color: white;
-}
+/* src/components/CheckoutTable.css */
+
+/* Styling for the header of the table */
+
+
 
 /* CheckOut End */
 
-/* ProductDetails Start */
-
-.product-detail-header {
-  background-color: #333 !important;
-  color: white !important;
-}
-
-/* ProductDetails End */
-
 /* Orders.js Start */
 
-.orders-table {
-  width: 100%;
-  table-layout: fixed; /* Ensure consistent column widths */
-  border-collapse: collapse;
-}
 
-.orders-table th,
-.orders-table td {
-  padding: 8px; /* Compact padding to match the screenshot */
-  text-align: left; /* Default to left alignment */
-  vertical-align: top;
-}
-
-/* Specific alignments for main table columns */
-.order-id-column {
-  width: 35%; /* Increased width to fully display the Order ID */
-}
-
-.order-id-cell {
-  white-space: normal; /* Allow wrapping if necessary */
-  word-break: break-all; /* Break long strings to fit the column */
-}
-
-.date-ordered-column {
-  width: 10%; /* Reduced width */
-}
-
-.date-ordered-cell {
-  white-space: nowrap; /* Prevent wrapping */
-  overflow: hidden; /* Hide overflow */
-  text-overflow: ellipsis; /* Add ellipsis for overflow */
-  max-width: 0; /* Allow the cell to respect the column width */
-}
-
-.status-column {
-  width: 10%; /* Reduced width */
-}
-
-.status-cell {
-  white-space: nowrap; /* Prevent wrapping */
-  overflow: hidden; /* Hide overflow */
-  text-overflow: ellipsis; /* Add ellipsis for overflow */
-  max-width: 0; /* Allow the cell to respect the column width */
-}
-
-.product-details-column {
-  width: 35%; /* Adjusted to fit the remaining space */
-}
-
-.total-price-column {
-  width: 10%; /* Reduced width */
-  text-align: right; /* Right-align Total Price */
-}
-
-.total-price-cell {
-  white-space: nowrap; /* Prevent wrapping */
-  overflow: hidden; /* Hide overflow */
-  text-overflow: ellipsis; /* Add ellipsis for overflow */
-  max-width: 0; /* Allow the cell to respect the column width */
-}
-
-/* Nested product details table */
-.product-details-table {
-  width: 100%;
-  table-layout: fixed; /* Ensure consistent column widths */
-  border-collapse: collapse;
-}
-
-.product-details-table th,
-.product-details-table td {
-  padding: 6px; /* Slightly smaller padding for nested table */
-  font-size: 0.9rem; /* Smaller font to match the screenshot */
-}
-
-/* Specific alignments and widths for nested table columns */
-.product-details-table th:nth-child(1),
-.product-details-table td:nth-child(1) {
-  width: 60%; /* Product Name */
-  text-align: left; /* Left-align Product Name */
-}
-
-.product-details-table th:nth-child(2),
-.product-details-table td:nth-child(2) {
-  width: 20%; /* Quantity */
-  text-align: center; /* Center Quantity */
-}
-
-.product-details-table th:nth-child(3),
-.product-details-table td:nth-child(3) {
-  width: 20%; /* Subtotal */
-  text-align: right; /* Right-align Subtotal */
-}
 
 
 /* Orders.js End */
@@ -243,97 +299,112 @@
 .product-detail-container {
   display: flex;
   justify-content: center;
-  margin: 30px auto;
-  padding: 20px;
+  align-items: center;
+  padding: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
 }
 
-/* Card styling - making the card sticky and removing shadow */
 .product-detail-card {
-  width: 80%;
-  max-width: 1000px;
-  background: #1c1c1c;  /* Dark background */
-  border: none;
-  border-radius: 10px;
-  position: sticky; /* Make the card sticky */
-  top: 20px;  /* The card will stick when the top of the card is 20px from the top of the viewport */
-  z-index: 100;  /* Ensures the card stays on top */
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 900px; /* Adjust as necessary */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Card header styling */
-.product-detail-header {
-  background: linear-gradient(45deg, #333 0%, #000 100%); /* Dark gradient */
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+.product-detail-image-container {
+  flex-shrink: 0; /* Prevent image from shrinking */
+  width: 50%; /* Image takes up 50% of the container */
+  height: auto;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.product-detail-header h2 {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #fff;
-  margin: 0;
+.product-detail-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
-/* Product description styling */
-.product-description {
-  font-size: 1.1rem;
-  color: #ccc;  /* Light grey text for better readability */
-  line-height: 1.6;
-  margin-bottom: 20px;
+
+.product-detail-body {
+  width: 50%; /* Content takes up the other 50% */
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-/* Price and quantity control styles */
+.product-detail-description {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
 .product-detail-quantity {
-  width: 160px;
+  width: 100%;
+  max-width: 120px; /* Limit to 2 digits in the quantity field */
+  margin: 0 auto;
 }
 
-.product-detail-quantity-display {
-  font-size: 1.2rem;
-  text-align: center;
-  width: 60px;
-  margin: 0 10px;
-  background: #333;  /* Dark background for the input */
-  color: #fff;  /* White text for the quantity */
-  border: 1px solid #444;  /* Subtle border */
+.product-detail-quantity .btn-sm {
+  padding: 0.5rem;
+  font-size: 1rem;
 }
 
 .product-detail-add-to-cart {
-  font-size: 1.2rem;
-  font-weight: 600;
-  padding: 12px;
-  border-radius: 30px;
-  transition: background-color 0.3s ease;
-  background-color: #444; /* Dark button background */
-  color: #fff;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  font-size: 1.1rem;
+  border-radius: 4px;
 }
 
-/* Hover effect for the button */
-.product-detail-add-to-cart:hover {
-  background-color: #555;  /* Lighter dark shade for hover */
-  color: #fff;
+.product-detail-title,
+.product-detail-price {
+  font-size: 1.25rem;
+  font-weight: bold;
 }
 
-/* Responsive design for small screens */
-@media (max-width: 768px) {
-  .product-detail-card {
-      width: 95%;
-  }
-
-  .product-detail-header h2 {
-      font-size: 1.8rem;
-  }
-
-  .product-description {
-      font-size: 1rem;
-  }
-
-  .product-detail-quantity {
-      width: 120px;
-  }
+.product-detail-price {
+  color: #333;
+  margin-bottom: 1.5rem;
 }
 
-.product-image {
-  width: 500px !important;   /* Fixed width */
-  height: 500px !important;  /* Fixed height */
-  object-fit: cover; /* Ensure image maintains aspect ratio and covers the area */
+.product-detail-body > h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
 }
+
+/* Admin.js */
+
+.scrollable-table-wrapper {
+  height: 400px; /* Fixed height */
+  width: 100%;   /* Width can be adjusted */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Hide horizontal scrolling if not needed */
+}
+
+.table-container {
+  max-height: 400px; /* You can adjust the height to fit your needs */
+  overflow-y: auto;  /* Enable scrolling for the table body */
+}
+
+.sticky-header th {
+  position: sticky;
+  top: 0;
+  background-color: #343a40; /* Make sure the header is visible */
+  z-index: 1; /* Ensure the header stays above the table body */
+}
+
+
+
+
+
 

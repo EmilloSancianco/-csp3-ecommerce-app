@@ -19,65 +19,56 @@ export default function ProductCard({ product }) {
             'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ='
         );
     };
-    
 
     // Function to handle navigation to the product detail page
     const handleViewProduct = () => {
         navigate(`/products/${product._id}`);
     };
 
-    // Limit description to 100 characters and add ellipsis if necessary
-    const maxLength = 30;
-    const truncatedDescription = product.description && product.description.trim() !== ''
-        ? (product.description.length > maxLength 
-            ? `${product.description.slice(0, maxLength)}...`
-            : product.description)
-        : 'No description available';
+    // Truncate helpers
+    const truncateText = (text, maxLength, fallback = 'No content available') =>
+        text && text.trim() !== ''
+            ? (text.length > maxLength ? `${text.slice(0, maxLength)}...` : text)
+            : fallback;
+
+    const truncatedDescription = truncateText(product.description, 18, 'No description available');
+    const truncatedName = truncateText(product.name, 12, 'No name');
 
     return (
         <Card
-            className="bg-dark text-white border-0 shadow-sm rounded-4 overflow-hidden product-card"
+            className="text-dark border-0 shadow-sm rounded-3 overflow-hidden product-card"
             onClick={handleViewProduct}
         >
-            {/* Image Section */}
-            <Card.Img
-                variant="top"
-                src={getImageUrl()}
-                alt={product.name}
-                className="product-card-img"
-                loading="lazy"
-            />
+            {/* Image Section with Darkened Overlay */}
+            <div className="product-image-container">
+                <Card.Img
+                    variant="top"
+                    src={getImageUrl()}
+                    alt={product.name}
+                    className="product-card-img"
+                    loading="lazy"
+                />
+                <div className="product-image-overlay"></div>
+            </div>
+
             <Card.Body className="d-flex flex-column justify-content-between p-3">
                 <div className="description-wrapper">
-                    {/* Product Title */}
-                    <Card.Title className="fw-bold text-center product-card-title">
-                        {product.name}
+                    {/* Truncated Product Title */}
+                    <Card.Title className="product-card-title">
+                        {truncatedName}
                     </Card.Title>
 
-                    {/* Product Description */}
-                    <Card.Text className="text-center product-card-description">
+                    {/* Truncated Description */}
+                    <Card.Text className="product-card-description">
                         {truncatedDescription}
                     </Card.Text>
                 </div>
 
-                <div className="mt-3 d-flex flex-column align-items-center">
-                    {/* Price Section */}
-                    <Card.Text className="fs-5 mb-2 product-card-price">
+                <div className="mt-3 d-flex flex-column align-items-start">
+                    {/* Price */}
+                    <Card.Text className="product-card-price">
                         <strong>Price:</strong> ₱{product.price.toLocaleString()}
                     </Card.Text>
-
-                    {/* View Product Button */}
-                    <Button
-                        variant="light"
-                        size="sm"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleViewProduct();
-                        }}
-                        className="text-uppercase fw-bold px-4 py-2 rounded-pill product-card-button"
-                    >
-                        View Product
-                    </Button>
                 </div>
             </Card.Body>
         </Card>

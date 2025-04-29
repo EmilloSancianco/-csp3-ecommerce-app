@@ -1,14 +1,16 @@
+// src/pages/Products.js
+
 import { useState, useEffect } from 'react';
-import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import ProductCard from '../components/ProductsCard';
+import ProductSearch from '../components/ProductSearch';
+import Loading from '../components/Loading'; // Import the Loading component
 
 export default function Products() {
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
-    const [searchName, setSearchName] = useState('');
-    const [minPrice, setMinPrice] = useState('');
-    const [maxPrice, setMaxPrice] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(true); // Added loading state
 
     // Fetch all products on load
     useEffect(() => {
@@ -24,15 +26,17 @@ export default function Products() {
                     setFilteredProducts([]);
                     setError('Failed to load products');
                 }
+                setLoading(false); // Set loading to false after data is fetched
             })
             .catch(err => {
                 console.error('Error fetching products:', err);
                 setError('An error occurred while fetching products');
+                setLoading(false); // Set loading to false if there's an error
             });
     }, []);
 
     // Handle search by name or price (or both)
-    const handleSearch = () => {
+    const handleSearch = (searchName, minPrice, maxPrice) => {
         let results = [...products]; // Start with all products
 
         // Search by name if searchName is provided
@@ -56,62 +60,22 @@ export default function Products() {
         setFilteredProducts(results);
     };
 
+    // Show loading spinner if loading is true
+    if (loading) {
+        return <Loading message="Loading products..." />;
+    }
+
     return (
-        <div className="mt-5">
+        <div className="mt-5 pt-5"> {/* Add padding-top to ensure space for navbar */}
             <h1 className="text-left mb-4">Products</h1>
 
-            <div className="search-filters mb-4">
-                <Row className="justify-content-start">
-                    {/* Name Search Field */}
-                    <Col xs={12} sm={6} md={5}>
-                        <Form.Group controlId="searchByName">
-                            <Form.Control
-                                type="text"
-                                placeholder="Search by name"
-                                value={searchName}
-                                onChange={(e) => setSearchName(e.target.value)}
-                            />
-                        </Form.Group>
-                    </Col>
-
-                    {/* Min and Max Price Fields */}
-                    <Col xs={4} sm={2} md={1}>
-                        <Form.Group controlId="minPrice">
-                            <Form.Control
-                                type="number"
-                                placeholder="Min"
-                                value={minPrice}
-                                onChange={(e) => setMinPrice(e.target.value)}
-                            />
-                        </Form.Group>
-                    </Col>
-                    <Col xs={4} sm={2} md={1}>
-                        <Form.Group controlId="maxPrice">
-                            <Form.Control
-                                type="number"
-                                placeholder="Max"
-                                value={maxPrice}
-                                onChange={(e) => setMaxPrice(e.target.value)}
-                            />
-                        </Form.Group>
-                    </Col>
-                </Row>
-
-                {/* Search Button */}
-                <Row className="justify-content-start mt-3">
-                    <Col xs={12} sm={4} md={3}>
-                        <Button variant="primary" onClick={handleSearch} block>
-                            Search
-                        </Button>
-                    </Col>
-                </Row>
-            </div>
+            <ProductSearch onSearch={handleSearch} />
 
             {error && <p className="text-danger text-center">{error}</p>}
 
             <Row className="justify-content-center g-4">
                 {Array.isArray(filteredProducts) && filteredProducts.map((product) => (
-                    <Col key={product._id} xs={12} sm={6} md={4} lg={3}>
+                     <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={2}>
                         <ProductCard product={product} />
                     </Col>
                 ))}

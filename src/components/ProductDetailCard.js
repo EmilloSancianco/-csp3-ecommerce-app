@@ -1,5 +1,5 @@
 import { Card, Button, Form, InputGroup } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'; // To handle navigation
+import { useNavigate } from 'react-router-dom';
 
 export default function ProductDetailCard({
     product,
@@ -11,13 +11,11 @@ export default function ProductDetailCard({
 }) {
     const navigate = useNavigate();
 
-    // Function to fetch image overrides from localStorage
     const getLocalImageOverrides = () => {
         const overrides = localStorage.getItem('imageOverrides');
         return overrides ? JSON.parse(overrides) : {};
     };
 
-    // Function to get the image URL (either from localStorage or the default one)
     const getImageUrl = () => {
         const overrides = getLocalImageOverrides();
         return (
@@ -26,85 +24,80 @@ export default function ProductDetailCard({
             'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ='
         );
     };
-    
 
-    // Format price with commas and two decimal places
     const formatPrice = (amount) => {
         return amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
-    // Function to handle navigation to the product detail page
     const handleViewProduct = () => {
         navigate(`/products/${product._id}`);
     };
 
     return (
         <div className="product-detail-container">
-            <Card className="product-detail-card shadow-lg rounded">
-                <Card.Body className="p-4">
-                    <div className="d-flex">
-                        {/* Image on the left */}
-                        <div className="product-image-container mb-4 me-4" onClick={handleViewProduct}>
+            <Card className="product-detail-card shadow-lg rounded square-card">
+                <Card.Body className="p-4 h-100">
+                    <div className="d-flex flex-column flex-md-row h-100">
+                        {/* Image Section */}
+                        <div
+                            className="product-detail-image-container mb-4 mb-md-0 me-md-4 flex-shrink-0"
+                            onClick={handleViewProduct}
+                        >
                             <img
                                 src={getImageUrl()}
                                 alt={product.name}
-                                className="product-image"
-                                style={{ cursor: 'pointer', width: '200px', height: '200px', objectFit: 'cover' }}
+                                className="product-detail-image img-fluid rounded"
                             />
                         </div>
 
-                        {/* Product details on the right */}
-                        <div className="ms-0">
-                            <h3 className="text-start mb-3">{product.name}</h3>
-
-                            <Card.Text className="mb-3 product-description">
-                                {product.description}
-                            </Card.Text>
-
-                            {/* Price */}
-                            <Card.Text className="mb-3">
-                                <strong>Price:</strong> ₱{formatPrice(product.price)}
-                            </Card.Text>
-
-                            <div className="d-flex align-items-center mb-3">
-                                <span className="me-2"><strong>Quantity:</strong></span>
-                                <InputGroup className="product-detail-quantity">
-                                    <Button 
-                                        variant="outline-dark" 
-                                        onClick={() => handleQuantityChange('decrement')} 
-                                        disabled={quantity <= 1}
-                                        className="btn-sm"
-                                        style={{ width: '30px', height: '30px', fontSize: '14px' }}
-                                    >
-                                        -
-                                    </Button>
-                                    <Form.Control 
-                                        type="text" 
-                                        value={quantity} 
-                                        readOnly 
-                                        className="text-center product-detail-quantity-display"
-                                        style={{ width: '40px', height: '30px', fontSize: '14px', padding: '0' }}
-                                    />
-                                    <Button 
-                                        variant="outline-dark" 
-                                        onClick={() => handleQuantityChange('increment')}
-                                        className="btn-sm"
-                                        style={{ width: '30px', height: '30px', fontSize: '14px' }}
-                                    >
-                                        +
-                                    </Button>
-                                </InputGroup>
+                        {/* Product Info */}
+                        <div className="d-flex flex-column justify-content-between w-100">
+                            <div>
+                                <h3 className="text-start mb-3">{product.name}</h3>
+                                <Card.Text className="mb-3 product-detail-description text-start">
+                                    {product.description}
+                                </Card.Text>
+                                <Card.Text className="mb-3 text-start">
+                                    <strong>Price:</strong> ₱{formatPrice(product.price)}
+                                </Card.Text>
                             </div>
 
-                            {/* Add to Cart Button */}
-                            <Button 
-                                variant="primary" 
-                                onClick={handleAddToCart} 
-                                disabled={loading || !product}
-                                className="product-detail-add-to-cart w-100"
-                            >
-                                {loading ? 'Adding...' : 'Add to Cart'}
-                            </Button>
+                            <div>
+                                <div className="d-flex align-items-center mb-3">
+                                    <span><strong>Quantity:</strong></span>
+                                    <InputGroup className="mx-2" style={{ maxWidth: '140px' }}>
+                                        <Button
+                                            variant="dark"
+                                            onClick={() => handleQuantityChange('decrement')}
+                                            disabled={quantity <= 1}
+                                            className="btn-sm"
+                                        >
+                                            -
+                                        </Button>
+                                        <Form.Control
+                                            type="text"
+                                            value={quantity}
+                                            readOnly
+                                            className="text-center"
+                                        />
+                                        <Button
+                                            variant="dark"
+                                            onClick={() => handleQuantityChange('increment')}
+                                            className="btn-sm"
+                                        >
+                                            +
+                                        </Button>
+                                    </InputGroup>
+                                </div>
+                                <Button
+                                    variant="primary"
+                                    onClick={handleAddToCart}
+                                    disabled={loading || !product}
+                                    className="w-100"
+                                >
+                                    {loading ? 'Adding...' : 'Add to Cart'}
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </Card.Body>

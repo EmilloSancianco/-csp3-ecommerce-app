@@ -1,50 +1,66 @@
 import { useContext } from 'react';
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
-
+import { Container, Navbar, Nav } from 'react-bootstrap';
 import { Link, NavLink } from 'react-router-dom';
 import UserContext from '../UserContext';
 
 export default function AppNavbar() {
+    const { user } = useContext(UserContext);
 
-	const { user } = useContext(UserContext);
+    return (
+        <Navbar expand="lg" className="navbar-center" fixed="top">
+            <Container>
+                {/* Brand on the left */}
+                <Navbar.Brand as={Link} to="/" className="navbar-brand text-black">
+                    AuraHome
+                </Navbar.Brand>
 
-	return(
-		<Navbar bg="primary" expand="lg">
-			<Container fluid>
-			    <Navbar.Brand as={Link} to="/">AuraHome</Navbar.Brand>
-			    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-			    <Navbar.Collapse id="basic-navbar-nav">
-				    <Nav className="ms-auto">
-				        <Nav.Link as={NavLink} to="/" exact="true">Home</Nav.Link>
-				        {(user.id !== null) 
-                            ? 
-								<>
-								{user.isAdmin && (
-									<Nav.Link as={Link} to="/admin">Admin Dashboard</Nav.Link>
-								)}
-                                {/* Hide 'Products' and 'My Cart' links if the user is an admin */}
+                {/* Toggler icon on the right */}
+                <Navbar.Toggle aria-controls="navbar-nav" className="ms-auto" />
+
+                <Navbar.Collapse id="navbar-nav">
+                    <Nav className="ms-auto">
+                        {!user.isAdmin && (
+                            <Nav.Link as={NavLink} to="/" exact="true" className="nav-link">
+                                Home
+                            </Nav.Link>
+                        )}
+                        {user.id !== null ? (
+                            <>
+                                {user.isAdmin && (
+                                    <Nav.Link as={Link} to="/admin" className="nav-link">
+                                        Admin Dashboard
+                                    </Nav.Link>
+                                )}
                                 {!user.isAdmin && (
-									<Nav.Link as={NavLink} to="/products" exact="true">Products</Nav.Link>
-								)}
-                                {!user.isAdmin && (
-									<Nav.Link as={Link} to="/cart">My Cart</Nav.Link>
-								)}
-								{!user.isAdmin && (
-									<Nav.Link as={Link} to="/orders">My Orders</Nav.Link>
-								)}
-								<Nav.Link as={Link} to="/logout">Logout</Nav.Link>
-								</>
-							: 
-								<>
-									<Nav.Link as={Link} to="/login">Login</Nav.Link>
-									<Nav.Link as={Link} to="/register">Register</Nav.Link>
-								</>
-						}
-				    </Nav>
-			    </Navbar.Collapse>
-			</Container>
-		</Navbar>
-	);
+                                    <>
+                                        <Nav.Link as={NavLink} to="/products" exact="true" className="nav-link">
+                                            Products
+                                        </Nav.Link>
+                                        <Nav.Link as={Link} to="/cart" className="nav-link">
+                                            My Cart
+                                        </Nav.Link>
+                                        <Nav.Link as={Link} to="/orders" className="nav-link">
+                                            My Orders
+                                        </Nav.Link>
+                                    </>
+                                )}
+                                <Nav.Link as={Link} to="/logout" className="nav-link">
+                                    Logout
+                                </Nav.Link>
+                            </>
+                        ) : (
+                            <>
+                                <Nav.Link as={Link} to="/login" className="nav-link">
+                                    Login
+                                </Nav.Link>
+                                <Nav.Link as={Link} to="/register" className="nav-link">
+                                    Register
+                                </Nav.Link>
+                            </>
+                        )}
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
+    );
 }

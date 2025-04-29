@@ -6,6 +6,7 @@ import AddProductModal from '../components/AddProductModal';
 import EditProductModal from '../components/EditProductModal';
 import OrdersModal from '../components/OrdersModal';
 import ProductsTable from '../components/ProductsTable';
+import UsersModal from '../components/UsersModal'; // Import the new UsersModal
 
 const notyf = new Notyf({ duration: 2000, position: { x: 'right', y: 'bottom' } });
 
@@ -14,6 +15,7 @@ const AdminDashboard = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showOrdersModal, setShowOrdersModal] = useState(false);
+  const [showUsersModal, setShowUsersModal] = useState(false); // State for UsersModal
   const [selectedProduct, setSelectedProduct] = useState({
     _id: '',
     name: '',
@@ -28,6 +30,7 @@ const AdminDashboard = () => {
     image: '',
   });
   const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState([]); // State for users
 
   // Load local image overrides from localStorage
   const getLocalImageOverrides = () => {
@@ -212,26 +215,75 @@ const AdminDashboard = () => {
     }
   };
 
+  // Fetch all users
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/users/all-users', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to fetch users');
+      }
+      setUsers(data.users || []); // Assuming the API returns { users: [...] }
+      setShowUsersModal(true);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      triggerError(error.message || 'Failed to fetch users!');
+    }
+  };
+
+  // Set a user as admin
+  const setAsAdmin = async (userId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/users/${userId}/set-as-admin`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to set user as admin');
+      }
+      fetchUsers(); // Refresh the users list
+      triggerSuccess('User set as admin successfully!');
+    } catch (error) {
+      console.error('Error setting user as admin:', error);
+      triggerError(error.message || 'Failed to set user as admin!');
+    }
+  };
+
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 pt-5">
       <h1 className="text-center mb-4">Admin Dashboard</h1>
 
       <div className="d-flex justify-content-center mb-4">
         <Button variant="primary" className="me-2" onClick={() => setShowAddModal(true)}>
           Add New Product
         </Button>
-        <Button variant="secondary" onClick={fetchOrders}>
+        <Button variant="secondary" className="me-2" onClick={fetchOrders}>
           Show User Orders
+        </Button>
+        <Button variant="info" onClick={fetchUsers}>
+          Show All Users
         </Button>
       </div>
 
-      {/* Products Table */}
-      <ProductsTable
-        products={products}
-        setSelectedProduct={setSelectedProduct}
-        setShowEditModal={setShowEditModal}
-        toggleAvailability={toggleAvailability}
-      />
+      <div className="scrollable-table-wrapper">
+        <ProductsTable
+          products={products}
+          setSelectedProduct={setSelectedProduct}
+          setShowEditModal={setShowEditModal}
+          toggleAvailability={toggleAvailability}
+        />
+      </div>
 
       {/* Add Product Modal */}
       <AddProductModal
@@ -258,6 +310,14 @@ const AdminDashboard = () => {
         orders={orders}
         updateOrderStatus={updateOrderStatus}
         removeOrder={removeOrder}
+      />
+
+      {/* Users Modal */}
+      <UsersModal
+        show={showUsersModal}
+        onHide={() => setShowUsersModal(false)}
+        users={users}
+        setAsAdmin={setAsAdmin}
       />
     </div>
   );

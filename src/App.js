@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container } from 'react-bootstrap';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate } from 'react-router-dom'; // Import Navigate
 import { Route, Routes } from 'react-router-dom';
 import AppNavbar from './components/AppNavbar';
 import Home from './pages/Home';
@@ -11,7 +11,7 @@ import Register from './pages/Register';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from './pages/AdminDashboard';
 import CheckOut from './pages/CheckOut';
 import Orders from './pages/Orders';
 
@@ -59,9 +59,9 @@ function App() {
                 <AppNavbar />
                 <Container>
                     <Routes>
-                        <Route path="/" element={<Home />} />
-
                         {/* Redirect logged-in users from /login and /register */}
+                        <Route path="/" element={user.id !== null && user.isAdmin ? <Navigate to="/admin" /> : <Home />} />
+
                         <Route path="/register" element={<ProtectedRoute element={<Register />} adminOnly={false} />} />
                         <Route path="/login" element={<ProtectedRoute element={<Login />} adminOnly={false} />} />
                         

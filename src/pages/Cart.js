@@ -1,10 +1,10 @@
-// src/pages/Cart.js
 import React, { useState, useEffect } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 import { useNavigate } from 'react-router-dom';
 import CartTable from '../components/CartTable';
+import Loading from '../components/Loading';
 
 export default function Cart() {
     const [cart, setCart] = useState(null);
@@ -28,10 +28,14 @@ export default function Cart() {
             }
 
             const data = await response.json();
-            setCart(data.cart);
+            if (!data.cart) {
+                setError('Your cart is empty. Please add products to your cart first.');
+            } else {
+                setCart(data.cart);
+            }
             setLoading(false);
         } catch (err) {
-            setError('Could not fetch cart data.');
+            setError('No cart found. Add a product to create one.');
             setLoading(false);
         }
     };
@@ -136,24 +140,39 @@ export default function Cart() {
         }
     };
 
+    const handleCheckout = () => {
+        if (cart && cart.cartItems.length === 0) {
+            notyf.error('Your cart is empty. Cannot proceed to checkout.');
+        } else {
+            navigate('/checkout'); // Navigate only if there are products in the cart
+        }
+    };
+
     useEffect(() => {
         fetchCart();
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <Loading message="Loading your cart..." />;  // Use the Loading component here
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return (
+            <Row className="mt-5 pt-5">
+                <Col md={12}>
+                    <h2>Your Shopping Cart</h2>
+                    <div>{error}</div> {/* Display error message if cart doesn't exist */}
+                </Col>
+            </Row>
+        );
     }
 
     return (
-        <Row className="my-4">
+        <Row className="mt-5 pt-5">
             <Col md={12}>
                 <h2>Your Shopping Cart</h2>
                 {cart && cart.cartItems.length === 0 ? (
-                    <div>Your cart is empty.</div>
+                    <div>Your cart is empty. Please add products to your cart first.</div>
                 ) : (
                     <CartTable
                         cartItems={cart.cartItems}
@@ -163,10 +182,19 @@ export default function Cart() {
                 )}
 
                 <div className="d-flex mt-3">
-                    <Button variant="danger" onClick={handleClearCart} className="me-2">
+                    <Button 
+                        variant="danger" 
+                        onClick={handleClearCart} 
+                        className="me-2" 
+                        disabled={cart && cart.cartItems.length === 0} // Disable the button if cart is empty
+                    >
                         Clear Cart
                     </Button>
-                    <Button variant="success" onClick={() => navigate('/checkout')}>
+                    <Button 
+                        variant="success" 
+                        onClick={handleCheckout} 
+                        disabled={cart && cart.cartItems.length === 0} // Disable the button if cart is empty
+                    >
                         Check Out
                     </Button>
                 </div>

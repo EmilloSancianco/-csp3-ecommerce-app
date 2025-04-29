@@ -1,6 +1,8 @@
+// src/pages/Orders.js
 import { useEffect, useState } from 'react';
-import { Container, Spinner, Alert } from 'react-bootstrap';
+import { Container, Alert } from 'react-bootstrap';
 import OrderTable from '../components/OrderTable';
+import Loading from '../components/Loading';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -77,22 +79,18 @@ const Orders = () => {
   }, [orders]);
 
   if (loading) {
-    return (
-      <Container className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-        <Spinner animation="border" variant="primary" />
-      </Container>
-    );
+    return <Loading message="Loading your orders..." />; // Use the Loading component here
   }
 
   return (
     <Container>
-      <h1 className="my-4">Order History</h1>
-      {error && <Alert variant="danger"><strong>Error: </strong>{error}</Alert>}
+      <h1 className="mt-5 pt-5">Order History</h1>
       {orders.length === 0 ? (
-        <Alert variant="info">You have no orders.</Alert>
-      ) : (
-        <OrderTable orders={orders} productsMap={productsMap} />
-      )}
+  <p className="text-muted">You have no orders.</p>
+) : (
+  <OrderTable orders={orders} productsMap={productsMap} />
+)}
+
     </Container>
   );
 };

@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 import ProductDetailCard from '../components/ProductDetailCard'; // Import the new component
+import Loading from '../components/Loading';
 
 const notyf = new Notyf();
 
@@ -62,12 +63,10 @@ export default function ProductDetail() {
             });
 
             const data = await response.json();
-
+            
             if (response.ok) {
                 notyf.success('Added to cart!');
-                setTimeout(() => {
-                    navigate('/cart');
-                }, 1000);
+                // Removed navigate('/cart') to stay on the same page
             } else {
                 notyf.error(data.message || 'Failed to add to cart.');
             }
@@ -77,22 +76,25 @@ export default function ProductDetail() {
         }
     };
 
+    // Show loading spinner if loading is true
     if (loading) {
-        return <div>Loading...</div>;
+        return <Loading message="Loading product details..." />;
     }
 
+    // Show error message if product is not available or there is an error
     if (error || !product) {
         return <div>Something went wrong. Please try again later.</div>;
     }
 
     return (
-        <ProductDetailCard
-            product={product}
-            quantity={quantity}
-            handleQuantityChange={handleQuantityChange}
-            subtotal={subtotal}
-            handleAddToCart={handleAddToCart}
-            loading={loading}
-        />
+        <div className="mt-5 pt-5">
+            <ProductDetailCard
+                product={product}
+                quantity={quantity}
+                handleQuantityChange={handleQuantityChange}
+                subtotal={subtotal}
+                handleAddToCart={handleAddToCart}
+            />
+        </div>
     );
 }

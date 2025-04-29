@@ -1,8 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
-import { Form, Button } from 'react-bootstrap';
 import { Navigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import UserContext from '../UserContext';
+import LoginForm from '../components/LoginForm';
+import { Container, Row, Col } from 'react-bootstrap';
+import Loading from '../components/Loading'; // Import the Loading component
 
 export default function Login() {
     const { user, setUser } = useContext(UserContext);
@@ -10,9 +12,12 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [isActive, setIsActive] = useState(false);
     const [redirect, setRedirect] = useState(false);
+    const [loading, setLoading] = useState(false); // Manage loading state
 
     function authenticate(e) {
         e.preventDefault();
+        
+        setLoading(true); // Set loading to true when the request starts
 
         fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/users/login', {
             method: 'POST',
@@ -23,6 +28,8 @@ export default function Login() {
         })
         .then(res => res.json().then(data => ({ status: res.status, body: data })))
         .then(({ status, body }) => {
+            setLoading(false); // Set loading to false once the response is received
+
             if (status === 200 && body.access) {
                 localStorage.setItem('token', body.access);
                 retrieveUserDetails(body.access);
@@ -35,7 +42,6 @@ export default function Login() {
 
                 setRedirect(true);
             } else {
-                // Handle specific error messages
                 let errorMsg = "Authentication failed. Please try again.";
                 if (body.error) {
                     errorMsg = body.error;
@@ -49,6 +55,7 @@ export default function Login() {
             }
         })
         .catch(err => {
+            setLoading(false); // Set loading to false on error
             console.error("Error during login:", err);
             Swal.fire({
                 title: "Server Error",
@@ -106,39 +113,23 @@ export default function Login() {
     }
 
     return (
-        <Form onSubmit={authenticate}>
-            <h1 className="my-5 text-center">Login</h1>
-            <Form.Group controlId="userEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control
-                    type="email"
-                    placeholder="Enter email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-            </Form.Group>
-
-            <Form.Group controlId="password">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-            </Form.Group>
-
-            {isActive ? (
-                <Button variant="primary" type="submit" className="mt-3">
-                    Submit
-                </Button>
-            ) : (
-                <Button variant="secondary" type="submit" disabled className="mt-3">
-                    Submit
-                </Button>
-            )}
-        </Form>
+        <Container className="mt-5 pt-5">
+            <Row className="justify-content-center">
+                <Col xs={12} md={6} lg={4}>
+                    {loading ? ( // Show loading spinner with a custom message while loading is true
+                        <Loading message="Logging In..." />
+                    ) : (
+                        <LoginForm
+                            email={email}
+                            setEmail={setEmail}
+                            password={password}
+                            setPassword={setPassword}
+                            isActive={isActive}
+                            onSubmit={authenticate}
+                        />
+                    )}
+                </Col>
+            </Row>
+        </Container>
     );
 }
