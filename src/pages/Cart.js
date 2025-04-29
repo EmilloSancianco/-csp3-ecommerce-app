@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Button, Row, Col, Table, InputGroup, Form } from 'react-bootstrap';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function Cart() {
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const notyf = new Notyf();  // Create an instance of Notyf
+    const navigate = useNavigate(); // 🆕 Add this for navigation
 
     const fetchCart = async () => {
         try {
@@ -86,8 +88,6 @@ export default function Cart() {
                 throw new Error(errorData.message || 'Failed to remove item from cart');
             }
 
-            const data = await response.json();
-
             const updatedCartItems = cart.cartItems.filter(item => item.productId !== productId);
             const updatedTotalPrice = updatedCartItems.reduce((total, item) => total + item.subtotal, 0);
 
@@ -97,12 +97,10 @@ export default function Cart() {
                 totalPrice: updatedTotalPrice,
             });
 
-            // Show success notification for removal
             notyf.success('Item removed from cart!');
 
         } catch (err) {
             console.error('Error removing item from cart:', err.message);
-            // Show error notification
             notyf.error('Failed to remove item from cart');
         }
     };
@@ -128,12 +126,10 @@ export default function Cart() {
                 totalPrice: 0,
             });
 
-            // Show success notification for clearing cart
             notyf.success('Cart cleared successfully!');
 
         } catch (err) {
             console.error('Error clearing the cart:', err.message);
-            // Show error notification
             notyf.error('Failed to clear cart');
         }
     };
@@ -224,9 +220,17 @@ export default function Cart() {
                         </tbody>
                     </Table>
                 )}
-                <Button variant="danger" onClick={handleClearCart} className="mt-3">
-                    Clear Cart
-                </Button>
+                
+                {/* ✨ Here are the TWO BUTTONS side-by-side */}
+                <div className="d-flex mt-3">
+                    <Button variant="danger" onClick={handleClearCart} className="me-2">
+                        Clear Cart
+                    </Button>
+                    <Button variant="success" onClick={() => navigate('/checkout')}>
+                        Check Out
+                    </Button>
+                </div>
+
             </Col>
         </Row>
     );

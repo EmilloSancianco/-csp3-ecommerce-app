@@ -22,6 +22,9 @@ export default function AppNavbar() {
                         
                             ? 
 								<>
+								{user.isAdmin && (
+<Nav.Link as={Link} to="/admin">Admin Dashboard</Nav.Link>
+)}
                                     <Nav.Link as={NavLink} to="/products" exact="true">Products</Nav.Link>
 									<Nav.Link as={Link} to="/cart">My Cart</Nav.Link>
 									<Nav.Link as={Link} to="/logout">Logout</Nav.Link>

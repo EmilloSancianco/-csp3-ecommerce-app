@@ -11,6 +11,8 @@ import Register from './pages/Register';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
+import AdminDashboard from "./pages/AdminDashboard";
+import CheckOut from './pages/CheckOut';
 
 
 import './App.css';
@@ -64,6 +66,8 @@ function App() {
                         <Route path="/products/:id" element={<ProductDetail />} />
                         <Route path="/cart" element= {<Cart />} />
                         <Route path="*" element={<Error />} />
+                        <Route path="/admin" element={<AdminDashboard />} />
+                        <Route path="/checkout" element={<CheckOut />} />
                     </Routes>
                 </Container>
             </Router>
