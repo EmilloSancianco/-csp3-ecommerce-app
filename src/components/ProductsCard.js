@@ -4,28 +4,95 @@ import { useNavigate } from 'react-router-dom';
 export default function ProductCard({ product }) {
     const navigate = useNavigate();
 
-    // Function to navigate to the product detail page
+    // Function to fetch image overrides from localStorage
+    const getLocalImageOverrides = () => {
+        const overrides = localStorage.getItem('imageOverrides');
+        return overrides ? JSON.parse(overrides) : {};
+    };
+
+    // Function to get the image URL (either from localStorage or the default one)
+    const getImageUrl = () => {
+        const overrides = getLocalImageOverrides();
+        return overrides[product._id] || product.imageUrl || 'path/to/placeholder-image.jpg';
+    };
+
+    // Function to handle navigation to the product detail page
     const handleViewProduct = () => {
-        console.log(product._id); // Or product.id based on your API response
         navigate(`/products/${product._id}`);
     };
 
+    // Function to render description safely
+    const renderDescription = () => {
+        // Check for null, undefined, or empty string
+        if (!product.description || product.description.trim() === '') {
+            return 'No description available';
+        }
+        return product.description;
+    };
+
     return (
-        <Card 
-            className="bg-dark text-white border-0 shadow-sm rounded-3" 
-            style={{ transition: "transform 0.3s ease-in-out" }}
+        <Card
+            className="bg-dark text-white border-0 shadow-sm rounded-4 overflow-hidden"
+            style={{ transition: 'transform 0.3s ease-in-out', cursor: 'pointer' }}
+            onClick={handleViewProduct}
         >
-            <Card.Body>
-                <Card.Title className="fw-bold">{product.name}</Card.Title>
-                <Card.Text className="text-muted">{product.description}</Card.Text>
-                <Card.Text className="fs-5">
-                    <strong>Price: </strong>${product.price}
-                </Card.Text>
-                <div className="d-flex justify-content-center">
-                    <Button 
-                        variant="secondary" 
-                        onClick={handleViewProduct} 
-                        className="text-uppercase fw-bold"
+            {/* Image Section */}
+            <Card.Img
+                variant="top"
+                src={getImageUrl()}
+                alt={product.name}
+                style={{
+                    height: '250px',
+                    objectFit: 'cover',
+                    opacity: 0.85,
+                    width: '100%',
+                }}
+                loading="lazy"
+            />
+            <Card.Body className="d-flex flex-column justify-content-between p-3">
+                <div>
+                    {/* Product Title */}
+                    <Card.Title
+                        className="fw-bold text-center text-truncate"
+                        style={{ fontSize: '1.2rem', marginBottom: '10px' }}
+                    >
+                        {product.name}
+                    </Card.Title>
+
+                    {/* Product Description */}
+                    <Card.Text
+                        className="text-center"
+                        style={{
+                            fontSize: '0.9rem',
+                            color: '#ccc', // Lighter color for visibility
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2, // Limit to 2 lines
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            minHeight: '2.6rem', // Reserve space for 2 lines
+                        }}
+                    >
+                        {renderDescription()}
+                    </Card.Text>
+                </div>
+
+                <div className="mt-3 d-flex flex-column align-items-center">
+                    {/* Price Section */}
+                    <Card.Text className="fs-5 mb-2" style={{ fontSize: '1.1rem' }}>
+                        <strong>Price:</strong> ₱{product.price}
+                    </Card.Text>
+
+                    {/* View Product Button */}
+                    <Button
+                        variant="light"
+                        size="sm"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewProduct();
+                        }}
+                        className="text-uppercase fw-bold px-4 py-2 rounded-pill"
+                        style={{ width: '100%' }}
                     >
                         View Product
                     </Button>

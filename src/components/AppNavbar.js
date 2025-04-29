@@ -19,15 +19,19 @@ export default function AppNavbar() {
 				    <Nav className="ms-auto">
 				        <Nav.Link as={NavLink} to="/" exact="true">Home</Nav.Link>
 				        {(user.id !== null) 
-                        
                             ? 
 								<>
 								{user.isAdmin && (
-<Nav.Link as={Link} to="/admin">Admin Dashboard</Nav.Link>
-)}
-                                    <Nav.Link as={NavLink} to="/products" exact="true">Products</Nav.Link>
+									<Nav.Link as={Link} to="/admin">Admin Dashboard</Nav.Link>
+								)}
+                                {/* Hide 'Products' and 'My Cart' links if the user is an admin */}
+                                {!user.isAdmin && (
+									<Nav.Link as={NavLink} to="/products" exact="true">Products</Nav.Link>
+								)}
+                                {!user.isAdmin && (
 									<Nav.Link as={Link} to="/cart">My Cart</Nav.Link>
-									<Nav.Link as={Link} to="/logout">Logout</Nav.Link>
+								)}
+								<Nav.Link as={Link} to="/logout">Logout</Nav.Link>
 								</>
 							: 
 								<>
@@ -39,5 +43,5 @@ export default function AppNavbar() {
 			    </Navbar.Collapse>
 			</Container>
 		</Navbar>
-		)
+	);
 }

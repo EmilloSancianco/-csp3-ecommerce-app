@@ -14,9 +14,9 @@ import Cart from './pages/Cart';
 import AdminDashboard from "./pages/AdminDashboard";
 import CheckOut from './pages/CheckOut';
 
-
 import './App.css';
 import { UserProvider } from './UserContext'; // Import UserProvider
+import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
 
 function App() {
     const [user, setUser] = useState({ id: null });
@@ -59,14 +59,20 @@ function App() {
                 <Container>
                     <Routes>
                         <Route path="/" element={<Home />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/login" element={<Login />} />
+
+                        {/* Redirect logged-in users from /login and /register */}
+                        <Route path="/register" element={<ProtectedRoute element={<Register />} adminOnly={false} />} />
+                        <Route path="/login" element={<ProtectedRoute element={<Login />} adminOnly={false} />} />
+                        
                         <Route path="/logout" element={<Logout unsetUser={unsetUser} />} />
                         <Route path="/products" element={<Products />} />
                         <Route path="/products/:id" element={<ProductDetail />} />
-                        <Route path="/cart" element= {<Cart />} />
+                        <Route path="/cart" element={<Cart />} />
                         <Route path="*" element={<Error />} />
-                        <Route path="/admin" element={<AdminDashboard />} />
+                        
+                        {/* Protect the Admin Route */}
+                        <Route path="/admin" element={<ProtectedRoute element={<AdminDashboard />} adminOnly={true} />} />
+                        
                         <Route path="/checkout" element={<CheckOut />} />
                     </Routes>
                 </Container>

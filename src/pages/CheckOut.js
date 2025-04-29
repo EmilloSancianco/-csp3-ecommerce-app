@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Row, Col, Alert } from 'react-bootstrap';
+import { Button, Table, Row, Col } from 'react-bootstrap';
 import { Notyf } from 'notyf';
 import { useNavigate } from 'react-router-dom';
 import 'notyf/notyf.min.css';
@@ -7,7 +7,6 @@ import 'notyf/notyf.min.css';
 export default function CheckOut() {
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [orderSuccess, setOrderSuccess] = useState(false);
     const notyf = new Notyf();
     const navigate = useNavigate();
 
@@ -29,6 +28,7 @@ export default function CheckOut() {
             setCart(data.cart);
         } catch (err) {
             console.error(err);
+            notyf.error('Failed to load cart.');
         } finally {
             setLoading(false);
         }
@@ -36,7 +36,6 @@ export default function CheckOut() {
 
     const handleCheckout = async () => {
         try {
-            // 🛠 Corrected URL here! notice: /orders/checkout (with 's')
             const response = await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/orders/checkout', {
                 method: 'POST',
                 headers: {
@@ -52,15 +51,13 @@ export default function CheckOut() {
             }
 
             notyf.success('Order placed successfully!');
-            setOrderSuccess(true);
-
             setTimeout(() => {
-                navigate('/'); // Redirect after placing the order
+                navigate('/');
             }, 2000);
 
         } catch (err) {
             console.error('Checkout Error:', err.message);
-            notyf.error(err.message);
+            notyf.error(err.message || 'Checkout failed.');
         }
     };
 
@@ -73,14 +70,14 @@ export default function CheckOut() {
     }
 
     if (!cart || cart.cartItems.length === 0) {
-        return <div>Your cart is empty. Nothing to checkout.</div>;
+        notyf.error('Your cart is empty. Nothing to checkout.');
+        return <div></div>;
     }
 
     return (
         <Row className="my-4">
             <Col md={12}>
                 <h2>Checkout Summary</h2>
-                {orderSuccess && <Alert variant="success">Order Successfully Placed!</Alert>}
                 <Table bordered hover>
                     <thead>
                         <tr style={{ backgroundColor: '#343a40', color: 'white' }}>
