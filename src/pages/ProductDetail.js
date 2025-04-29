@@ -1,8 +1,9 @@
+// src/pages/ProductDetail.js
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
-import { Card, Button, Form, InputGroup } from 'react-bootstrap';
+import ProductDetailCard from '../components/ProductDetailCard'; // Import the new component
 
 const notyf = new Notyf();
 
@@ -85,52 +86,13 @@ export default function ProductDetail() {
     }
 
     return (
-        <div className="d-flex justify-content-center my-4">
-            <Card className="product-detail-card">
-                <Card.Header className="text-center product-detail-header">
-                    {product.name}
-                </Card.Header>
-                <Card.Body>
-                    <Card.Text className="mb-3">
-                        {product.description}
-                    </Card.Text>
-                    <Card.Text className="mb-3">
-                        <strong>Price:</strong> ₱{product.price}
-                    </Card.Text>
-                    <div className="d-flex align-items-center mb-3">
-                        <span className="me-2"><strong>Quantity:</strong></span>
-                        <InputGroup className="product-detail-quantity">
-                            <Button 
-                                variant="dark" 
-                                onClick={() => handleQuantityChange('decrement')} 
-                                disabled={quantity <= 1}
-                            >
-                                -
-                            </Button>
-                            <Form.Control 
-                                type="text" 
-                                value={quantity} 
-                                readOnly 
-                                className="text-center product-detail-quantity-display"
-                            />
-                            <Button 
-                                variant="dark" 
-                                onClick={() => handleQuantityChange('increment')}
-                            >
-                                +
-                            </Button>
-                        </InputGroup>
-                    </div>
-                    <Button 
-                        variant="primary" 
-                        onClick={handleAddToCart} 
-                        disabled={loading || !product}
-                        className="product-detail-add-to-cart"
-                    >
-                        Add to Cart
-                    </Button>
-                </Card.Body>
-            </Card>
-        </div>
+        <ProductDetailCard
+            product={product}
+            quantity={quantity}
+            handleQuantityChange={handleQuantityChange}
+            subtotal={subtotal}
+            handleAddToCart={handleAddToCart}
+            loading={loading}
+        />
     );
 }

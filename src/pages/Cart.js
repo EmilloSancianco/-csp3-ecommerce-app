@@ -1,8 +1,10 @@
+// src/pages/Cart.js
 import React, { useState, useEffect } from 'react';
-import { Button, Row, Col, Table, InputGroup, Form } from 'react-bootstrap';
+import { Button, Row, Col } from 'react-bootstrap';
 import { Notyf } from 'notyf';
 import 'notyf/notyf.min.css';
 import { useNavigate } from 'react-router-dom';
+import CartTable from '../components/CartTable';
 
 export default function Cart() {
     const [cart, setCart] = useState(null);
@@ -153,63 +155,13 @@ export default function Cart() {
                 {cart && cart.cartItems.length === 0 ? (
                     <div>Your cart is empty.</div>
                 ) : (
-                    <Table bordered className="cart-table">
-                        <thead>
-                            <tr className="cart-table-header">
-                                <th className="cart-table-name">Name</th>
-                                <th className="cart-table-price">Price</th>
-                                <th className="cart-table-quantity">Quantity</th>
-                                <th className="cart-table-subtotal">Subtotal</th>
-                                <th className="cart-table-actions">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {cart.cartItems.map(item => (
-                                <tr key={item._id}>
-                                    <td className="cart-table-name-cell">
-                                        {item.productName}
-                                    </td>
-                                    <td>₱{item.subtotal / item.quantity}</td>
-                                    <td>
-                                        <InputGroup className="cart-quantity-input">
-                                            <Button
-                                                variant="dark"
-                                                onClick={() => handleQuantityChange(item.productId, 'decrement')}
-                                                disabled={item.quantity <= 1}
-                                                className="cart-quantity-button decrement"
-                                            >
-                                                -
-                                            </Button>
-                                            <Form.Control
-                                                type="text"
-                                                value={item.quantity}
-                                                readOnly
-                                                className="text-center cart-quantity-display"
-                                            />
-                                            <Button
-                                                variant="dark"
-                                                onClick={() => handleQuantityChange(item.productId, 'increment')}
-                                                className="cart-quantity-button increment"
-                                            >
-                                                +
-                                            </Button>
-                                        </InputGroup>
-                                    </td>
-                                    <td>₱{item.subtotal}</td>
-                                    <td>
-                                        <Button
-                                            variant="danger"
-                                            onClick={() => handleRemoveFromCart(item.productId)}
-                                        >
-                                            Remove
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
+                    <CartTable
+                        cartItems={cart.cartItems}
+                        onQuantityChange={handleQuantityChange}
+                        onRemoveFromCart={handleRemoveFromCart}
+                    />
                 )}
-                
+
                 <div className="d-flex mt-3">
                     <Button variant="danger" onClick={handleClearCart} className="me-2">
                         Clear Cart

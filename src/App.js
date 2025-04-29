@@ -13,6 +13,7 @@ import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import AdminDashboard from "./pages/AdminDashboard";
 import CheckOut from './pages/CheckOut';
+import Orders from './pages/Orders';
 
 import './App.css';
 import { UserProvider } from './UserContext'; // Import UserProvider
@@ -68,6 +69,7 @@ function App() {
                         <Route path="/products" element={<Products />} />
                         <Route path="/products/:id" element={<ProductDetail />} />
                         <Route path="/cart" element={<Cart />} />
+                        <Route path="/orders" element={<Orders />} />
                         <Route path="*" element={<Error />} />
                         
                         {/* Protect the Admin Route */}

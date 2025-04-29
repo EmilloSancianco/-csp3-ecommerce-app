@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
@@ -30,6 +30,9 @@ export default function AppNavbar() {
 								)}
                                 {!user.isAdmin && (
 									<Nav.Link as={Link} to="/cart">My Cart</Nav.Link>
+								)}
+								{!user.isAdmin && (
+									<Nav.Link as={Link} to="/orders">My Orders</Nav.Link>
 								)}
 								<Nav.Link as={Link} to="/logout">Logout</Nav.Link>
 								</>
