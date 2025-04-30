@@ -14,7 +14,7 @@ export default function Products() {
 
     // Fetch all products on load
     useEffect(() => {
-        fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/products/active')
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/products/active`)
             .then(res => res.json())
             .then(data => {
                 if (Array.isArray(data)) {

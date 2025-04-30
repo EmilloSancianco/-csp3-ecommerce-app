@@ -23,7 +23,7 @@ export default function ProductDetail() {
 
     const fetchProductDetails = async (productId) => {
         try {
-            const response = await fetch(`https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/products/${productId}`);
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/products/${productId}`);
             const data = await response.json();
             setProduct(data);
             setLoading(false);
@@ -49,7 +49,7 @@ export default function ProductDetail() {
 
     const handleAddToCart = async () => {
         try {
-            const response = await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/cart/add-to-cart', {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cart/add-to-cart`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,

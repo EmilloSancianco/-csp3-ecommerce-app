@@ -16,7 +16,7 @@ const Orders = () => {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No authentication token found.');
 
-        const response = await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/orders/my-orders', {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/orders/my-orders`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const Orders = () => {
 
         const productNames = {};
         for (let productId of productIds) {
-          const productResponse = await fetch(`https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/products/${productId}`);
+          const productResponse = await fetch(`${process.env.REACT_APP_API_BASE_URL}/products/${productId}`);
           if (productResponse.ok) {
             const productData = await productResponse.json();
             productNames[productId] = productData.name || 'Unknown Product';

@@ -56,7 +56,7 @@ export default function Register() {
         // === Proceed to send request if valid ===
         setLoading(true); // Set loading state to true when starting registration
 
-        fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/users/register', {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/users/register`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"

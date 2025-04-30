@@ -67,7 +67,7 @@ const AdminDashboard = () => {
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/products/all', {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/products/all`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -86,7 +86,7 @@ const AdminDashboard = () => {
   const handleAddProduct = async () => {
     try {
       const token = localStorage.getItem('token');
-      await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/products', {
+      await fetch(`${process.env.REACT_APP_API_BASE_URL}/products`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(newProduct),
@@ -105,7 +105,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem('token');
       const { name, description, price } = selectedProduct;
-      await fetch(`https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/products/${selectedProduct._id}/update`, {
+      await fetch(`${process.env.REACT_APP_API_BASE_URL}/products/${selectedProduct._id}/update`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ name, description, price }),
@@ -128,7 +128,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem('token');
       const endpoint = product.isActive ? 'archive' : 'activate';
-      await fetch(`https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/products/${product._id}/${endpoint}`, {
+      await fetch(`${process.env.REACT_APP_API_BASE_URL}/products/${product._id}/${endpoint}`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -143,7 +143,7 @@ const AdminDashboard = () => {
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/orders/all-orders', {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/orders/all-orders`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -183,7 +183,7 @@ const AdminDashboard = () => {
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/orders/${orderId}/accept`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/orders/${orderId}/accept`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ status: newStatus }),
@@ -203,7 +203,7 @@ const AdminDashboard = () => {
   const removeOrder = async (orderId) => {
     try {
       const token = localStorage.getItem('token');
-      await fetch(`https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/orders/${orderId}`, {
+      await fetch(`${process.env.REACT_APP_API_BASE_URL}/orders/${orderId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -219,7 +219,7 @@ const AdminDashboard = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/users/all-users', {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/users/all-users`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -242,7 +242,7 @@ const AdminDashboard = () => {
   const setAsAdmin = async (userId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/users/${userId}/set-as-admin`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}/set-as-admin`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,

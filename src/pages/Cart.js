@@ -15,7 +15,7 @@ export default function Cart() {
 
     const fetchCart = async () => {
         try {
-            const response = await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/cart/get-cart', {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cart/get-cart`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -58,7 +58,7 @@ export default function Cart() {
             updatedCart.totalPrice = updatedCart.cartItems.reduce((total, i) => total + i.subtotal, 0);
             setCart(updatedCart);
 
-            const response = await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/cart/update-cart-quantity', {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cart/update-cart-quantity`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -81,7 +81,7 @@ export default function Cart() {
 
     const handleRemoveFromCart = async (productId) => {
         try {
-            const response = await fetch(`https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/cart/${productId}/remove-from-cart`, {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cart/${productId}/remove-from-cart`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -113,7 +113,7 @@ export default function Cart() {
 
     const handleClearCart = async () => {
         try {
-            const response = await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/cart/clear-cart', {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cart/clear-cart`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,

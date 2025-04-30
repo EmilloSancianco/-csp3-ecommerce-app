@@ -19,7 +19,7 @@ export default function Login() {
         
         setLoading(true); // Set loading to true when the request starts
 
-        fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/users/login', {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/users/login`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -69,7 +69,7 @@ export default function Login() {
     }
 
     const retrieveUserDetails = (token) => {
-        fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/users/details', {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/users/details`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`

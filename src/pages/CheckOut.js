@@ -14,7 +14,7 @@ export default function CheckOut() {
 
     const fetchCart = async () => {
         try {
-            const response = await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/cart/get-cart', {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/cart/get-cart`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -38,7 +38,7 @@ export default function CheckOut() {
 
     const handleCheckout = async () => {
         try {
-            const response = await fetch('https://monhod8wi7.execute-api.us-west-2.amazonaws.com/production/orders/checkout', {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/orders/checkout`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
