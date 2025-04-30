@@ -1,7 +1,6 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-
 const OrdersModal = ({ show, onHide, orders, updateOrderStatus, removeOrder }) => {
   return (
     <Modal show={show} onHide={onHide} size="xl">
@@ -23,7 +22,7 @@ const OrdersModal = ({ show, onHide, orders, updateOrderStatus, removeOrder }) =
             </thead>
             <tbody>
               {orders && orders.length > 0 ? (
-                orders.map((order) => (
+                [...orders].reverse().map((order) => (
                   <tr key={order._id}>
                     <td>{order.userId}</td>
                     <td>{order.orderedOn ? new Date(order.orderedOn).toLocaleString() : 'N/A'}</td>
