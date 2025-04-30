@@ -1,16 +1,26 @@
 import { useContext } from 'react';
 import { Container, Navbar, Nav } from 'react-bootstrap';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import UserContext from '../UserContext';
 
 export default function AppNavbar() {
     const { user } = useContext(UserContext);
+    const navigate = useNavigate(); // Import useNavigate hook
+
+    const handleBrandClick = () => {
+        // If the user is an admin, redirect to the admin dashboard
+        if (user.isAdmin) {
+            navigate('/admin');
+        } else {
+            navigate('/'); // Otherwise, go to the homepage
+        }
+    };
 
     return (
         <Navbar expand="lg" className="navbar-center" fixed="top">
             <Container>
-                {/* Brand on the left */}
-                <Navbar.Brand as={Link} to="/" className="navbar-brand text-black">
+                {/* Brand on the left with conditional redirect */}
+                <Navbar.Brand as="div" onClick={handleBrandClick} className="navbar-brand text-black" style={{ cursor: 'pointer' }}>
                     AuraHome
                 </Navbar.Brand>
 
@@ -41,6 +51,9 @@ export default function AppNavbar() {
                                         </Nav.Link>
                                         <Nav.Link as={Link} to="/orders" className="nav-link">
                                             My Orders
+                                        </Nav.Link>
+                                        <Nav.Link as={Link} to="/profile" className="nav-link">
+                                            Profile
                                         </Nav.Link>
                                     </>
                                 )}

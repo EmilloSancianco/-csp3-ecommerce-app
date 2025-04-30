@@ -2,6 +2,13 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 
 const OrderTable = ({ orders, productsMap }) => {
+  // Sort orders by orderedOn descending (most recent first)
+  const sortedOrders = [...orders].sort((a, b) => {
+    const dateA = new Date(a.orderedOn || 0);
+    const dateB = new Date(b.orderedOn || 0);
+    return dateB - dateA;
+  });
+
   return (
     <div className="table-responsive">
       <Table striped className="orders-table minimalistic-table">
@@ -15,25 +22,14 @@ const OrderTable = ({ orders, productsMap }) => {
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) => {
-            // Extract the Order ID and date from order._id if necessary
+          {sortedOrders.map((order) => {
             const orderIdParts = order._id ? order._id.split('/') : [];
             const orderId = orderIdParts.length > 0 ? orderIdParts[0] : 'Unknown ID';
             const extractedDate = orderIdParts.length > 1 ? orderIdParts.slice(1).join('/') : null;
 
-            // Use order.orderedOn if available, otherwise use the extracted date
             const orderedOn = order.orderedOn
               ? new Date(order.orderedOn).toLocaleDateString()
-              : extractedDate
-              ? extractedDate
-              : 'Unknown Date';
-
-            // Log for debugging
-            if (order._id && order._id.includes('/')) {
-              console.warn(
-                `Malformed Order ID detected: ${order._id}. Extracted ID: ${orderId}, Date: ${orderedOn}`
-              );
-            }
+              : extractedDate || 'Unknown Date';
 
             return (
               <tr key={order._id}>

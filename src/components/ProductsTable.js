@@ -28,11 +28,11 @@ const ProductsTable = ({ products, setSelectedProduct, setShowEditModal, toggleA
                   <td>₱{price.toLocaleString('en-US')}</td>
                   <td>{product.isActive ? 'Available' : 'Unavailable'}</td>
                   <td className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-2">
-                    {/* Edit Button - Appears at the top on mobile */}
+                    {/* Edit Button */}
                     <Button
                       variant="primary"
                       size="sm"
-                      className="me-md-2 mb-2 mb-md-0"
+                      className="me-md-2 mb-2 mb-md-0 action-button edit-button"
                       onClick={() => {
                         setSelectedProduct(product);
                         setShowEditModal(true);
@@ -41,10 +41,11 @@ const ProductsTable = ({ products, setSelectedProduct, setShowEditModal, toggleA
                       Edit
                     </Button>
 
-                    {/* Disable/Activate Button - Appears at the bottom on mobile */}
+                    {/* Disable/Activate Button */}
                     <Button
                       variant={product.isActive ? 'danger' : 'success'}
                       size="sm"
+                      className="mt-2 mt-md-0 action-button"
                       onClick={() => toggleAvailability(product)}
                     >
                       {product.isActive ? 'Disable' : 'Activate'}

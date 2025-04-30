@@ -1,5 +1,7 @@
+import { useContext } from 'react';
 import { Card, Button, Form, InputGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import UserContext from '../UserContext'; // Adjust path if necessary
 
 export default function ProductDetailCard({
     product,
@@ -9,6 +11,7 @@ export default function ProductDetailCard({
     handleAddToCart,
     loading
 }) {
+    const { user } = useContext(UserContext);
     const navigate = useNavigate();
 
     const getLocalImageOverrides = () => {
@@ -31,6 +34,14 @@ export default function ProductDetailCard({
 
     const handleViewProduct = () => {
         navigate(`/products/${product._id}`);
+    };
+
+    const handleCartClick = () => {
+        if (!user.id) {
+            navigate('/login');
+        } else {
+            handleAddToCart();
+        }
     };
 
     return (
@@ -63,6 +74,7 @@ export default function ProductDetailCard({
                             </div>
 
                             <div>
+                                {/* Quantity Section */}
                                 <div className="d-flex align-items-center mb-3">
                                     <span><strong>Quantity:</strong></span>
                                     <InputGroup className="mx-2" style={{ maxWidth: '140px' }}>
@@ -89,11 +101,13 @@ export default function ProductDetailCard({
                                         </Button>
                                     </InputGroup>
                                 </div>
-                                <Button
+
+                                {/* Add to Cart Button */}
+                                <Button 
                                     variant="primary"
-                                    onClick={handleAddToCart}
+                                    onClick={handleCartClick}
                                     disabled={loading || !product}
-                                    className="w-100"
+                                    className="w-100 mt-5"
                                 >
                                     {loading ? 'Adding...' : 'Add to Cart'}
                                 </Button>

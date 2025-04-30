@@ -1,12 +1,15 @@
+import React from 'react';
 import Banner from '../components/Banner';
-import { Button, Row, Col, Container } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import FeaturedProducts from '../components/FeaturedProducts';  // Import the FeaturedProducts component
 
 export default function Home() {
     return (
         <div>
-            {/* Banner section */}
+            {/* Banner Section */}
             <Banner />
+            
+            {/* Featured Products Section */}
+            <FeaturedProducts />
         </div>
     );
 }

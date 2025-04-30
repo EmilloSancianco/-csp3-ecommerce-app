@@ -1,4 +1,4 @@
-import { Card, Button } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 export default function ProductCard({ product }) {
@@ -25,13 +25,12 @@ export default function ProductCard({ product }) {
         navigate(`/products/${product._id}`);
     };
 
-    // Truncate helpers
+    // Truncate helper for the product name
     const truncateText = (text, maxLength, fallback = 'No content available') =>
         text && text.trim() !== ''
             ? (text.length > maxLength ? `${text.slice(0, maxLength)}...` : text)
             : fallback;
 
-    const truncatedDescription = truncateText(product.description, 18, 'No description available');
     const truncatedName = truncateText(product.name, 12, 'No name');
 
     return (
@@ -57,11 +56,6 @@ export default function ProductCard({ product }) {
                     <Card.Title className="product-card-title">
                         {truncatedName}
                     </Card.Title>
-
-                    {/* Truncated Description */}
-                    <Card.Text className="product-card-description">
-                        {truncatedDescription}
-                    </Card.Text>
                 </div>
 
                 <div className="mt-3 d-flex flex-column align-items-start">

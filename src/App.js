@@ -14,6 +14,7 @@ import Cart from './pages/Cart';
 import AdminDashboard from './pages/AdminDashboard';
 import CheckOut from './pages/CheckOut';
 import Orders from './pages/Orders';
+import Profile from './pages/Profile';
 
 import './App.css';
 import { UserProvider } from './UserContext'; // Import UserProvider
@@ -58,24 +59,26 @@ function App() {
             <Router>
                 <AppNavbar />
                 <Container>
-                    <Routes>
-                        {/* Redirect logged-in users from /login and /register */}
-                        <Route path="/" element={user.id !== null && user.isAdmin ? <Navigate to="/admin" /> : <Home />} />
-
-                        <Route path="/register" element={<ProtectedRoute element={<Register />} adminOnly={false} />} />
-                        <Route path="/login" element={<ProtectedRoute element={<Login />} adminOnly={false} />} />
-                        
-                        <Route path="/logout" element={<Logout unsetUser={unsetUser} />} />
+                <Routes>
+                        {/* Public Routes */}
+                        <Route path="/" element={<Home />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
                         <Route path="/products" element={<Products />} />
                         <Route path="/products/:id" element={<ProductDetail />} />
-                        <Route path="/cart" element={<Cart />} />
-                        <Route path="/orders" element={<Orders />} />
-                        <Route path="*" element={<Error />} />
-                        
-                        {/* Protect the Admin Route */}
+
+                        {/* Protected Routes - require login */}
+                        <Route path="/logout" element={<ProtectedRoute element={<Logout unsetUser={unsetUser} />} />} />
+                        <Route path="/cart" element={<ProtectedRoute element={<Cart />} />} />
+                        <Route path="/orders" element={<ProtectedRoute element={<Orders />} />} />
+                        <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
+                        <Route path="/checkout" element={<ProtectedRoute element={<CheckOut />} />} />
+
+                        {/* Admin-only Route */}
                         <Route path="/admin" element={<ProtectedRoute element={<AdminDashboard />} adminOnly={true} />} />
-                        
-                        <Route path="/checkout" element={<CheckOut />} />
+
+                        {/* Catch-all */}
+                        <Route path="*" element={<Error />} />
                     </Routes>
                 </Container>
             </Router>

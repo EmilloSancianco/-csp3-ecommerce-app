@@ -404,6 +404,23 @@ button.remove-button:focus {
 }
 
 
+/* Ensure buttons have a consistent width and height */
+.action-button {
+  min-width: 100px; /* Prevents shrinking below this width */
+  height: 40px; /* Adjust the button height */
+}
+
+/* Optional: Adjust the width for the Edit button */
+.action-button.edit-button {
+  min-width: 80px;
+}
+
+/* Optional: Adjust the margin for the buttons */
+.table .action-button {
+  margin: 0 5px;
+}
+
+
 
 
 

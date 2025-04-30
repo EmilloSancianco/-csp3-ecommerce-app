@@ -53,6 +53,8 @@ export default function CheckOut() {
             }
 
             notyf.success('Order placed successfully!');
+            // Redirect to orders page after successful checkout
+            navigate('/orders');
 
         } catch (err) {
             console.error('Checkout Error:', err.message);

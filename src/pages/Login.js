@@ -13,6 +13,7 @@ export default function Login() {
     const [isActive, setIsActive] = useState(false);
     const [redirect, setRedirect] = useState(false);
     const [loading, setLoading] = useState(false); // Manage loading state
+    const [adminRedirect, setAdminRedirect] = useState(false); // State for admin redirect
 
     function authenticate(e) {
         e.preventDefault();
@@ -32,15 +33,14 @@ export default function Login() {
 
             if (status === 200 && body.access) {
                 localStorage.setItem('token', body.access);
-                retrieveUserDetails(body.access);
-
+                // Show SweetAlert before redirect
                 Swal.fire({
                     title: "Login Successful",
                     icon: "success",
                     text: "Welcome back!"
+                }).then(() => {
+                    retrieveUserDetails(body.access);
                 });
-
-                setRedirect(true);
             } else {
                 let errorMsg = "Authentication failed. Please try again.";
                 if (body.error) {
@@ -64,7 +64,7 @@ export default function Login() {
             });
         });
 
-        setEmail('');
+        setEmail('');  // Reset email and password fields
         setPassword('');
     }
 
@@ -82,6 +82,14 @@ export default function Login() {
                     id: data.user._id,
                     isAdmin: data.user.isAdmin
                 });
+                
+                // Check if the user is an admin, then set the adminRedirect state to true
+                if (data.user.isAdmin) {
+                    setAdminRedirect(true);
+                } else {
+                    // Redirect non-admin users to /home
+                    setRedirect(true);
+                }
             } else {
                 Swal.fire({
                     title: "User Not Found",
@@ -110,6 +118,10 @@ export default function Login() {
 
     if (redirect) {
         return <Navigate to="/" />;
+    }
+
+    if (adminRedirect) {
+        return <Navigate to="/admin" />;
     }
 
     return (

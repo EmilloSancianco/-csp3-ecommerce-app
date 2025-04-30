@@ -14,6 +14,7 @@ export default function Register() {
     const [email, setEmail] = useState("");
     const [mobileNo, setMobileNo] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     const [isActive, setIsActive] = useState(false);
     const [loading, setLoading] = useState(false); // New loading state
@@ -53,6 +54,15 @@ export default function Register() {
             return;
         }
 
+        if (password !== confirmPassword) {
+            Swal.fire({
+                title: "Passwords Do Not Match",
+                icon: "error",
+                text: "Please ensure that both passwords match."
+            });
+            return;
+        }
+
         // === Proceed to send request if valid ===
         setLoading(true); // Set loading state to true when starting registration
 
@@ -80,6 +90,7 @@ export default function Register() {
                 setEmail('');
                 setMobileNo('');
                 setPassword('');
+                setConfirmPassword('');
 
                 Swal.fire({
                     title: "Registration Successful",
@@ -114,13 +125,14 @@ export default function Register() {
             lastName !== "" &&
             email !== "" &&
             mobileNo !== "" &&
-            password !== ""
+            password !== "" &&
+            confirmPassword !== ""
         ) {
             setIsActive(true);
         } else {
             setIsActive(false);
         }
-    }, [firstName, lastName, email, mobileNo, password]);
+    }, [firstName, lastName, email, mobileNo, password, confirmPassword]);
 
     if (redirect) {
         return <Navigate to="/login" />; // Redirect to login page after successful registration
@@ -146,6 +158,8 @@ export default function Register() {
                             setMobileNo={setMobileNo}
                             password={password}
                             setPassword={setPassword}
+                            confirmPassword={confirmPassword}
+                            setConfirmPassword={setConfirmPassword}
                             isActive={isActive}
                             onSubmit={registerUser}
                         />
